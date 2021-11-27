@@ -41,6 +41,8 @@ const actions = {
 }
 
 export default {
+  // 命名空间,加上之后才能成为局部模块
+  // 如果不加的话,仍然是全局模块
   namespaced: true,
   state,
   mutations,

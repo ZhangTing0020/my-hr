@@ -1,3 +1,5 @@
+// 定义全局通用的变量
+
 // sidebar
 $menuText:#bfcbd9;
 $menuActiveText:#409EFF;
@@ -13,6 +15,7 @@ $sideBarWidth: 210px;
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+// 定义的变量可以再js代码中使用,,,下边的变量暴露给js  底层知识依赖的来时webpack
 :export {
   menuText: $menuText;
   menuActiveText: $menuActiveText;
