@@ -7,11 +7,15 @@ const baseURL = 'http://localhost:9528/dev-api/'
 const service = axios.create({
   baseURL: baseURL
 })
-
+// 自定义函数封装通用调用接口的方法：支持固定的data传参
+// 1. 传输传递；返回值
+// 2. 参数如何使用，具体的发送请求的过程，与axios有关
 export default (options) => {
   return service({
     url: options.url,
     method: options.method || 'GET',
+    // 如果请求方式是GET就是有params属性传递参数，其他方式使用data属性传递参数
+    // ES6的规则：对象的键key可以是动态的
     [options.method.toUpperCase() === 'GET' ? 'params' : 'data']: options.data
 
   })
