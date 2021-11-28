@@ -6,6 +6,11 @@
         <!-- <h3 class="title">Login Form</h3> -->
         <img src="@/assets/common/login-logo.png" alt="">
       </div>
+      <!-- 表单验证 做了几件事??? -->
+      <!-- 1.绑定数据 v-model -->
+      <!-- 2. 校验规则 rules -->
+      <!-- 3. 设置props-->
+      <!--4. 兜底校验,进到登录页之后,没有输入任何值,也能登录进去,解决这个问题 -->
 
       <el-form-item prop="username">
         <span class="svg-container">
@@ -61,14 +66,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码至少6位'))
       } else {
         callback()
       }
@@ -107,6 +112,8 @@ export default {
       })
     },
     handleLogin() {
+      // 手动校验表单(兜底校验)
+      // ref可以操作原生DOM 也可以操作组件实例对象
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
