@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <svg-icon class-name="abc" icon-class="tree" />
   </div>
 </template>
 
@@ -26,5 +27,8 @@ export default {
     font-size: 30px;
     line-height: 46px;
   }
+}
+.abc {
+  color: red;
 }
 </style>

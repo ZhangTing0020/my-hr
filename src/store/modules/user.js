@@ -4,6 +4,7 @@ import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
+    // 从缓存中读取原有的token
     token: getToken(),
     name: '',
     avatar: ''
@@ -28,19 +29,31 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
+  // action的返回值是Promise实例对象
+  async login({ commit }, userInfo) {
     const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    const ret = await login({ mobile: username.trim(), password: password })
+    if (ret.code === 10000) {
+      // 登录成功
+      commit('SET_TOKEN', ret.data)
+      // 缓存token(存到Cookie中)
+      setToken(ret.data)
+      return Promise.resolve(true)
+    } else {
+      // 登录失败
+      return Promise.reject(false)
+    }
+    // return new Promise((resolve, reject) => {
+    //   login({ mobile: username.trim(), password: password })
+    //     .then(response => {
+    //       const { data } = response
+    //       commit('SET_TOKEN', data.token)
+    //       setToken(data.token)
+    //       resolve()
+    //     }).catch(error => {
+    //       reject(error)
+    //     })
+    // })
   },
 
   // get user info
@@ -94,4 +107,3 @@ export default {
   mutations,
   actions
 }
-

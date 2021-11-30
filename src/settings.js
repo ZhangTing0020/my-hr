@@ -1,23 +1,17 @@
-// 全局特性的配置,一般统一放到通用的配置文件中
-
+// 全局特性的配置一般统一放到通用的配置文件中
 module.exports = {
-// 控制项目名称
-// 网页顶部的标签名字
+  // 控制网页顶部的标签中的名字
   title: 'Vue Admin Template',
 
   /**
    * @type {boolean} true | false
-   * 是否固定header
-   * 上下有滚动条的时候,header不固定
-   * @description Whether fix the header
+   * @description Whether fix the header 是否固定Header
    */
-  fixedHeader: false,
+  fixedHeader: true,
 
   /**
    * @type {boolean} true | false
-   * 是否显示logo
-   * 左侧侧边栏顶部,是否显示logo
-   * @description Whether show the logo in sidebar
+   * @description Whether show the logo in sidebar 左侧侧边栏顶部是否显示logo图片
    */
-  sidebarLogo: false
+  sidebarLogo: true
 }

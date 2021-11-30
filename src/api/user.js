@@ -1,6 +1,7 @@
 import request from '@/utils/request'
-// axios  get请求用params   post请求用data
-// 需求:传递参数时,不区分参数传递方式
+
+// 传递参数时，不区分参数传递方式
+// 登录
 export function login(data) {
   return request({
     url: '/sys/login',
@@ -9,6 +10,7 @@ export function login(data) {
   })
 }
 
+// 获取用户信息
 export function getInfo(token) {
   return request({
     url: '/vue-admin-template/user/info',
@@ -17,6 +19,7 @@ export function getInfo(token) {
   })
 }
 
+// 退出
 export function logout() {
   return request({
     url: '/vue-admin-template/user/logout',

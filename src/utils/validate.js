@@ -17,8 +17,6 @@ export function isExternal(path) {
 export function validUsername(str) {
   // const valid_map = ['admin', 'editor']
   // return valid_map.indexOf(str.trim()) >= 0
-  // 双叹号  保证结果是一个布尔值
-  // 用于把数据转化成布尔值
-  // ******************************新知识*******
+  // 双叹号用于把数据转换为布尔值
   return !!str
 }

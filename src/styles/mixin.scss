@@ -1,5 +1,3 @@
-// 定义一个混入
-// 提前定义一段代码,谁需要谁调用  @include 这就叫混入
 @mixin clearfix {
   &:after {
     content: "";

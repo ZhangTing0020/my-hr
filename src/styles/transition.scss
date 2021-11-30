@@ -1,5 +1,5 @@
 // global transition css
-// C3 动画
+
 /* fade */
 .fade-enter-active,
 .fade-leave-active {
@@ -12,7 +12,6 @@
 }
 
 /* fade-transform */
-// 这里的类名是结合样式写的?????什么样式
 .fade-transform-leave-active,
 .fade-transform-enter-active {
   transition: all .5s;
