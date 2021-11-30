@@ -27,6 +27,14 @@ export function getInfo() {
   })
 }
 
+// 获取用户头像信息
+export function getDetailInfo (id) {
+  // 参数ID表示当前登录系统的用户id
+  return request({
+    method: 'get',
+    url: '/sys/user/' + id
+  })
+}
 // 退出
 export function logout() {
   return request({

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">name: {{ uname }}</div>
     <svg-icon class-name="abc" icon-class="tree" />
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
   name: 'Dashboard',
   computed: {
     ...mapGetters([
-      'name'
+      'uname'
     ])
   }
 }

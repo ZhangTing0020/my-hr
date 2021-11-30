@@ -19,6 +19,7 @@
         <div class="avatar-wrapper">
           <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
+          <span>{{ uname }}</span>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
@@ -44,12 +45,18 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(['sidebar', 'avatar', 'uname'])
   },
-  created() {
-    this.$store.dispatch('user/getInfo')
+  // 一进入首页,就去加载右上角的用户信息
+  async created() {
+    // 获取用户信息 , 触发actions ,去store 下的user.js
+    // this.$store.dispatch('user/getInfo')
+
+    await this.getInfo()
+    this.getDetailInfo(this.$store.getters.userId)
   },
   methods: {
+    ...mapActions('user', ['getInfo', 'getDetailInfo']),
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
