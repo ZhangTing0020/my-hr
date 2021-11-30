@@ -86,6 +86,7 @@ const actions = {
   // 获取用户信息
   async getInfo({ commit, state }) {
     const ret = await getInfo()
+    console.log(ret)
     if (ret.code === 10000) {
       // 触发mutations更新用户信息
       commit('updateInfo', ret.data)

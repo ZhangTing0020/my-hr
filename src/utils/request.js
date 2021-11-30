@@ -1,4 +1,4 @@
-import { config } from '@vue/test-utils'
+// import { config } from '@vue/test-utils'
 import axios from 'axios'
 import store from '../store'
 // 基准路径(node.js中提供了获取环境变量的API: process.env.环境变量的名称)

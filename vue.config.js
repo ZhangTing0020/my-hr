@@ -36,7 +36,16 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js')
+    // 配置代理,,,解决跨域问题******************************
+    // 如果请求地址是 http://localhost:9528
+    // 那么实际发送的请求是http://ihrm-java.itheima.net/api/sys/profile
+    proxy: {
+      '^/api': {
+        // target 的值表示被代理的目标地址
+        target: 'http://ihrm-java.itheima.net'
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
