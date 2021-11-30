@@ -7,7 +7,9 @@ const getDefaultState = () => {
     // 从缓存中读取原有的token
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    // 用户信息
+    userInfo: null
   }
 }
 
@@ -25,6 +27,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  updateInfo(state, payload) {
+    state.userInfo = payload
   }
 }
 
@@ -34,6 +39,7 @@ const actions = {
     const { username, password } = userInfo
     const ret = await login({ mobile: username.trim(), password: password })
     if (ret.code === 10000) {
+      console.log(ret)
       // 登录成功
       commit('SET_TOKEN', ret.data)
       // 缓存token(存到Cookie中)
@@ -56,25 +62,34 @@ const actions = {
     // })
   },
 
-  // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+  // // get user info
+  // getInfo({ commit, state }) {
+  //   return new Promise((resolve, reject) => {
+  //     getInfo(state.token).then(response => {
+  //       const { data } = response
 
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
+  //       if (!data) {
+  //         return reject('Verification failed, please Login again.')
+  //       }
 
-        const { name, avatar } = data
+  //       const { name, avatar } = data
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  //       commit('SET_NAME', name)
+  //       commit('SET_AVATAR', avatar)
+  //       resolve(data)
+  //     }).catch(error => {
+  //       reject(error)
+  //     })
+  //   })
+  // },
+
+  // 获取用户信息
+  async getInfo({ commit, state }) {
+    const ret = await getInfo()
+    if (ret.code === 10000) {
+      // 触发mutations更新用户信息
+      commit('updateInfo', ret.data)
+    }
   },
 
   // user logout

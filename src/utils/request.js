@@ -1,12 +1,25 @@
+import { config } from '@vue/test-utils'
 import axios from 'axios'
-
-// 基准路径
-const baseURL = 'http://ihrm-java.itheima.net/api/'
+import store from '../store'
+// 基准路径(node.js中提供了获取环境变量的API: process.env.环境变量的名称)
+const baseURL = process.env.VUE_APP_BASE_API
 // const baseURL = 'http://localhost:9528/dev-api'
 
 // 创建axios实例对象
 const service = axios.create({
   baseURL: baseURL
+})
+
+// 添加请求拦截器
+service.interceptors.request.use(config => {
+  // 统一添加请求头,如果有token,就添加请求头Authorization
+  const token = store.getters.token
+  if (token) {
+    config.headers.Authorization = 'Bearer ' + token
+  }
+  return config
+}, (err) => {
+  return Promise.reject(err)
 })
 
 // 添加响应拦截器

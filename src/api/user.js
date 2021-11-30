@@ -11,11 +11,19 @@ export function login(data) {
 }
 
 // 获取用户信息
-export function getInfo(token) {
+// export function getInfo(token) {
+//   return request({
+//     url: '/vue-admin-template/user/info',
+//     method: 'get',
+//     data: { token }
+//   })
+// }
+
+// 获取用户信息
+export function getInfo() {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    data: { token }
+    url: '/sys/profile',
+    method: 'POST'
   })
 }
 
