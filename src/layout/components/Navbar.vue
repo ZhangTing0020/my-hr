@@ -56,6 +56,8 @@ export default {
     this.getDetailInfo(this.$store.getters.userId)
   },
   methods: {
+    // actions 异步修改数据,,,采用映射的方法
+    // 映射过来的方法,就可以当作是当前组件的自己的方法,直接使用
     ...mapActions('user', ['getInfo', 'getDetailInfo']),
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
