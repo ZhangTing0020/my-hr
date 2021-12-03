@@ -17,7 +17,7 @@
       <!-- 右侧下拉菜单 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-imgerror :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
           <span>{{ uname }}</span>
         </div>
@@ -25,6 +25,7 @@
           <router-link to="/">
             <el-dropdown-item> 首页 </el-dropdown-item>
           </router-link>
+          <!-- native的作用：把原生事件绑定到组件的根节点上  -->
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">退出</span>
           </el-dropdown-item>
@@ -39,10 +40,18 @@ import { mapGetters, mapActions } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
+// 导入头像的默认数据,也就是导入一张图片
+import defaultImg from '@/assets/common/head.jpg'
+
 export default {
   components: {
     // Breadcrumb,
     Hamburger
+  },
+  data() {
+    return {
+      defaultImg
+    }
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar', 'uname'])
@@ -64,7 +73,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/login`)
     }
   }
 }

@@ -1,3 +1,4 @@
+// js-cookie 是一个第三方插件
 import Cookies from 'js-cookie'
 
 const state = {

@@ -20,14 +20,10 @@ import '@/icons' // icon
 // 权限控制（控制是否登录的访问权限）
 import '@/permission' // permission control
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
+import myPlugin from './utils/plugin.js'
+import defaultImg from '@/assets/common/head.jpg'
+Vue.use(myPlugin, { default: defaultImg })
+
 // 实现模拟接口的功能（用js代码写的假的临时接口）
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')

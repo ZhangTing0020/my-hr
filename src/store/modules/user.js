@@ -1,6 +1,14 @@
-import { login, logout, getInfo, getDetailInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
+import {
+  login,
+  getInfo,
+  getDetailInfo
+} from '@/api/user'
+import {
+  getToken,
+  setToken,
+  removeToken
+} from '@/utils/auth'
+// import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -31,7 +39,7 @@ const mutations = {
   // 这里是在定义方法,mutations中的方法
   // mutations 方法的第一个参数是state
   // 更新用户信息
-  updateInfo (state, payload) {
+  updateInfo(state, payload) {
     if (state.userInfo) {
       // 之前已经有数据了
       state.userInfo = {
@@ -42,14 +50,23 @@ const mutations = {
       // 之前是默认数据null
       state.userInfo = payload
     }
+  },
+  removeInfo(state, Info) {
+    state.userInfo = null
   }
 }
 
 const actions = {
   // action的返回值是Promise实例对象
   async login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    const ret = await login({ mobile: username.trim(), password: password })
+    const {
+      username,
+      password
+    } = userInfo
+    const ret = await login({
+      mobile: username.trim(),
+      password: password
+    })
     if (ret.code === 10000) {
       console.log(ret)
       // 登录成功
@@ -63,33 +80,24 @@ const actions = {
     }
   },
 
-  // // get user info
-  // getInfo({ commit, state }) {
-  //   return new Promise((resolve, reject) => {
-  //     getInfo(state.token).then(response => {
-  //       const { data } = response
-
-  //       if (!data) {
-  //         return reject('Verification failed, please Login again.')
-  //       }
-
-  //       const { name, avatar } = data
-
-  //       commit('SET_NAME', name)
-  //       commit('SET_AVATAR', avatar)
-  //       resolve(data)
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // },
+  logout({ commit }) {
+    // 删除vuex中的token
+    commit('SET_TOKEN', '')
+    // 删除本地存储中的token
+    removeToken()
+    // 删除用户信息
+    commit('removeInfo', '')
+  },
 
   // 获取用户信息 ,这里是从layout下的components/Navbar调过来的
   // 这个getInfo是 actions的属性,actions是异步修改数据,
   // 在严格模式下,修改数据只能通过mutations修改
 
   // actions中方法的第一个参数是store
-  async getInfo({ commit, state }) {
+  async getInfo({
+    commit,
+    state
+  }) {
     const ret = await getInfo() // 这个getInfo 是api下的接口
     console.log(ret)
     if (ret.code === 10000) {
@@ -101,29 +109,32 @@ const actions = {
   },
 
   // 获取包括头像的详细数据
-  async getDetailInfo (context, id) {
+  async getDetailInfo(context, id) {
     const ret = await getDetailInfo(id)
+    console.log(ret)
     if (ret.code === 10000) {
       context.commit('updateInfo', ret.data)
     }
   },
 
-  // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+  // // user logout
+  // logout({ commit, state }) {
+  //   return new Promise((resolve, reject) => {
+  //     logout(state.token).then(() => {
+  //       removeToken() // must remove  token  first
+  //       resetRouter()
+  //       commit('RESET_STATE')
+  //       resolve()
+  //     }).catch(error => {
+  //       reject(error)
+  //     })
+  //   })
+  // },
 
   // remove token
-  resetToken({ commit }) {
+  resetToken({
+    commit
+  }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
