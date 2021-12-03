@@ -42,7 +42,7 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  // 首页模块
   {
     path: '/',
     component: Layout,
@@ -51,8 +51,21 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: '首页' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
+  },
+  // 组织架构模块
+  {
+    path: '/departments',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'departments',
+        component: () => import('@/views/departments'),
+        meta: { title: '组织架构', icon: 'dashboard' }
+      }
+    ]
   }
 
   // 404 page must be placed at the end !!!

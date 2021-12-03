@@ -3,7 +3,7 @@
 
 const myImgerror = {
   install(Vue, options) {
-    console.log('111111', options)
+    // console.log('111111', options)
     Vue.directive('imgerror', {
       inserted(el, bindings) {
         console.log(el)
@@ -12,8 +12,8 @@ const myImgerror = {
         // 如何判断图片加载失败了？基于img标签的onerror事件
         // 只有图片加载失败了,才会触发onerror事件
         el.onerror = () => {
-          console.log(el.src)
-          console.log('图片加载失败了')
+          // console.log(el.src)
+          // console.log('图片加载失败了')
           // 如果图片加载失败,就要给src属性重新赋值
           el.setAttribute('src', bindings.value || options.default)
         }
