@@ -36,7 +36,7 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  // hidden 是自定义属性,名字可以随便起,因为路由规则数组的每一个元素都是一个对象,可以给元素添加属性
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -63,7 +63,7 @@ export const constantRoutes = [
         path: '',
         name: 'departments',
         component: () => import('@/views/departments'),
-        meta: { title: '组织架构', icon: 'dashboard' }
+        meta: { title: '组织架构', icon: 'tree' }
       }
     ]
   }
