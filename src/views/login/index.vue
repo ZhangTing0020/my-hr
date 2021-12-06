@@ -3,9 +3,16 @@
     <!-- 表单验证 做了几件事??? -->
     <!-- 1.绑定数据 v-model -->
     <!-- 2. 校验规则 rules -->
-    <!-- 3. 设置props-->
+    <!-- 3. 设置prop-->
     <!--4. 兜底校验,进到登录页之后,没有输入任何值,也能登录进去,解决这个问题 -->
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
       <!-- 登录框标题 -->
       <div class="title-container">
         <h3 class="title">
@@ -17,26 +24,51 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text" tabindex="1" auto-complete="on" />
+        <el-input
+          ref="username"
+          v-model="loginForm.username"
+          placeholder="Username"
+          name="username"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+        />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType" placeholder="Password" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin" />
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="loginForm.password"
+          :type="passwordType"
+          placeholder="Password"
+          name="password"
+          tabindex="2"
+          auto-complete="on"
+          @keyup.enter.native="handleLogin"
+        />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <svg-icon
+            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+          />
         </span>
       </el-form-item>
 
-      <el-button class="login-btn" :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button
+        class="login-btn"
+        :loading="loading"
+        type="primary"
+        style="width: 100%; margin-bottom: 30px"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">账号: 13800000002</span>
+        <span style="margin-right: 20px">账号: 13800000002</span>
         <span> 密码: 123456</span>
       </div>
-
     </el-form>
   </div>
 </template>
@@ -47,7 +79,7 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
-  data () {
+  data() {
     // 自定义验证规则
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -69,8 +101,12 @@ export default {
         password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
       passwordType: 'password',
@@ -87,7 +123,7 @@ export default {
   },
   methods: {
     ...mapActions('user', ['login']),
-    showPwd () {
+    showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -97,11 +133,11 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin () {
+    handleLogin() {
       console.log('****************')
       // 手动校验表单
       // ref可以操作原生DOM；也可以操作组件实例
-      this.$refs.loginForm.validate(async valid => {
+      this.$refs.loginForm.validate(async (valid) => {
         console.log('11111111111111')
         // 验证如果不通过，就终止后续代码
         if (!valid) {
@@ -144,7 +180,7 @@ $cursor: #fff;
 /* reset element-ui css */
 .login-container {
   // 设置背景图片
-  background-image: url('~@/assets/common/login.jpg');
+  background-image: url("~@/assets/common/login.jpg");
   // 将图片位置设置为充满整个屏幕
   background-position: center;
   .el-input {
