@@ -36,6 +36,7 @@
 
     }
 
+    // 两个类名连接在一起 , 交集选择器
     .el-scrollbar__bar.is-vertical {
       right: 0px;
     }
@@ -44,6 +45,9 @@
       height: 100%;
     }
 
+    // &符号 表示的就是.sidebar-container 当前的父容器 &和后边的类名之间没有空格
+    // 如果没有空格就是并列关系（两个类名必须同时存在）
+    // 如果有空格，就是父子关系
     &.has-logo {
       .el-scrollbar {
         height: calc(100% - 50px);
@@ -106,6 +110,7 @@
       }
     }
 
+    // 子代选择器
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
     }

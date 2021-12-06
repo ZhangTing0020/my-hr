@@ -38,8 +38,8 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      console.log('000000000', this.$route)
-      console.log('11111111111111', this.$router)
+      // console.log('000000000', this.$route)
+      // console.log('11111111111111', this.$router)
       return this.$router.options.routes
     },
     activeMenu() {

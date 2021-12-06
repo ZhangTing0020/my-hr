@@ -68,7 +68,7 @@ const actions = {
       password: password
     })
     if (ret.code === 10000) {
-      console.log(ret)
+      // console.log(ret)
       // 登录成功
       commit('SET_TOKEN', ret.data)
       // 缓存token(存到Cookie中)
@@ -99,7 +99,7 @@ const actions = {
     state
   }) {
     const ret = await getInfo() // 这个getInfo 是api下的接口
-    console.log(ret)
+    // console.log(ret)
     if (ret.code === 10000) {
       // 在严格模式下,修改数据只能通过mutations修改
       // 触发mutations更新用户信息
@@ -111,7 +111,7 @@ const actions = {
   // 获取包括头像的详细数据
   async getDetailInfo(context, id) {
     const ret = await getDetailInfo(id)
-    console.log(ret)
+    // console.log(ret)
     if (ret.code === 10000) {
       context.commit('updateInfo', ret.data)
     }

@@ -6,7 +6,7 @@ const myImgerror = {
     // console.log('111111', options)
     Vue.directive('imgerror', {
       inserted(el, bindings) {
-        console.log(el)
+        // console.log(el)
         // el表示绑定该指令的DOM元素
         // bindings表示指令相关的信息 bindings.value
         // 如何判断图片加载失败了？基于img标签的onerror事件
