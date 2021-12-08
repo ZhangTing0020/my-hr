@@ -3,7 +3,7 @@
     <div class="dashboard-container">
       <el-card class="tree-card">
         <!-- tree-tools 子组件通知父组件打开弹窗 -->
-        <tree-tools :node-data="titleData" @on-open="toggleAddDept" />
+        <tree-tools :node-data="titleData" @on-open="toggleAddDept" @edit-dept="handleOpen" />
         <!-- 树形菜单 -->
         <el-tree :data="departs" :props="defaultProps">
           <!-- 中间的代码就是插槽内容，用于定制每一行的布局效果 -->
@@ -12,6 +12,7 @@
               :node-data="scope.data"
               @on-success="onSuccess"
               @on-open="toggleAddDept"
+              @edit-dept="handleOpen"
             />
           </template>
         </el-tree>
@@ -22,14 +23,20 @@
     <!-- add-dept子组件通知父组件关闭弹窗 -->
     <!-- <add-dept :dept-id="currentDeptId" :dlist="dlist" :is-show-dept="isShowDept" @on-close="toggleAddDept" /> -->
     <!-- .sync修饰符作用：实现父子传值的双向绑定 -->
-    <AddDept :dept-id="currentDeptId" :dlist="dlist" :is-show-dept.sync="isShowDept" />
+    <AddDept
+      :dept-id="currentDeptId"
+      :dlist="dlist"
+      :is-show-dept.sync="isShowDept"
+      :plist="plist"
+      @on-success="onSuccess"
+    />
   </div>
 </template>
 
 <script>
 import TreeTools from './components/TreeTools.vue'
 import AddDept from './components/AddDept.vue'
-import { getDepartmentsAPI } from '@/api/departments.js'
+import { getDepartmentsAPI, editDepartmentAPI } from '@/api/departments.js'
 export default {
   name: 'Departments',
   components: { TreeTools, AddDept },
@@ -57,6 +64,7 @@ export default {
       // 需要重新定义一个数组,来接收原始数据
       dlist: [],
       departs: [],
+      plist: null, // 根据id获得的部门信息
       defaultProps: {
         // 万一后台给的树形数据, 不是label 和 children 字段名呢 ?通过 props 修改默认配置
         // label	指定节点标签为节点对象的某个属性值
@@ -70,7 +78,8 @@ export default {
       titleData: {
         name: '江苏传智播客教育科技股份有限公司',
         manager: '负责人',
-        root: true
+        root: true,
+        id: ''
       },
       arr: []
     }
@@ -80,6 +89,20 @@ export default {
     // this.ceshi()
   },
   methods: {
+    async handleOpen(id) {
+      try {
+        const ret = await editDepartmentAPI(id)
+        console.log(ret)
+        if (ret.code === 10000) {
+          this.plist = ret.data
+          console.log(this.plist)
+          this.isShowDept = true
+          this.currentDeptId = id
+        }
+      } catch {
+        this.$message.error('编辑失败')
+      }
+    },
     onSuccess() {
       this.loadDepartmentsList()
     },
@@ -110,7 +133,7 @@ export default {
     async loadDepartmentsList() {
       try {
         const ret = await getDepartmentsAPI()
-        console.log(ret.data.depts)
+        // console.log(ret.data.depts)
         if (ret.code === 10000) {
           // this.departs = ret.data.depts
           // ret.data.depts就是后台返回的所有数据(包括所有的一级部门,二级部门),
@@ -137,6 +160,7 @@ export default {
     //   }
     //   console.log('空数组不能调用空数组') // 打印这个
     // }
+
   }
 }
 </script>

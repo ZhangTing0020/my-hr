@@ -17,6 +17,7 @@
           <!-- 下拉菜单 element -->
           <!-- elementUI中,下拉菜单的指令事件 点击菜单项后会触发事件，
           用户可以通过相应的菜单项 key 进行不同的操作 -->
+          <!-- @command是事件 -->
           <el-dropdown @command="handleAction">
             <span style="cursor: pointer">
               操作<i class="el-icon-arrow-down" />
@@ -30,6 +31,7 @@
               </template>
             </el-dropdown-menu> -->
             <el-dropdown-menu slot="dropdown">
+              <!-- 这里的command是指令 -->
               <el-dropdown-item command="add">添加子部门</el-dropdown-item>
               <template v-if="!nodeData.root">
                 <el-dropdown-item command="edit">编辑部分</el-dropdown-item>
@@ -63,6 +65,7 @@ export default {
         this.addDept()
         console.log('add')
       } else if (type === 'edit') {
+        this.editDept()
         console.log('edit')
       } else if (type === 'del') {
         this.delDepartments(this.nodeData.id)
@@ -89,6 +92,10 @@ export default {
     addDept() {
       // 通知父组件打开弹窗
       this.$emit('on-open', this.nodeData.id)
+    },
+    editDept() {
+      // 通知父组件打开弹窗
+      this.$emit('edit-dept', this.nodeData.id)
     }
   }
 }

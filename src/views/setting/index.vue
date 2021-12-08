@@ -1,18 +1,217 @@
 <template>
-  <div class="dashboard-container">
+  <div class="setting-container">
     <div class="app-container">
-      <h2>
-        公司设置
-      </h2>
+      <el-card>
+        <el-tabs>
+          <!-- 左侧 -->
+          <el-tab-pane label="角色管理">
+            <!-- 按钮 -->
+            <!-- 新增角色,点击新增角色的按钮,出现弹窗,需要用一个状态位,来控制弹窗的显示与关闭 -->
+            <el-button
+              icon="el-icon-plus"
+              size="small"
+              type="primary"
+              @click="isShowAddBox=true"
+            >新增角色</el-button>
+            <!-- 表格 -->
+            <!-- v-loading 是el-table中的自定义指令,需要绑定一个布尔值 -->
+            <el-table v-loading="loading" :data="list">
+              <!-- type="index" :index="handleIndex" 是ElementUI提供的 修改每一条数据的序号 只是:index中的方法名有所变化 -->
+              <el-table-column type="index" :index="handleIndex" label="序号" width="100" />
+              <el-table-column label="角色名称" width="240" prop="name" />
+              <el-table-column label="描述" prop="description" />
+              <el-table-column label="操作">
+                <!-- 这里是作用域插槽
+                以前学的作用域插槽都是自己写的,现在用的都是插件写好的,,作用域插槽是父组件为了用子组件中的数据,
+                所以有v-slot
+                   <MyTreeTest :data="list">
+                     <template v-slot="scope">
+                         《{{ scope.data.name }}》
+                     </template>
+                   </MyTreeTest>
+                   上边这个就是之前的用法
+                 -->
+                <template v-slot="scope">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <!-- 删除角色的时候,需要传入一个实参id,这个id的来源是要用到作用域插槽
+                通过子组件传给父组件的id,来删除角色 -->
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="reqDeleteRole(scope.row.id)"
+                  >删除</el-button>
+                </template>
+
+              </el-table-column>
+            </el-table>
+
+            <!-- 分页 -->
+            <el-pagination
+              layout="total,sizes, jumper,prev, pager, next"
+              :page-sizes="[2, 10, 20, 30, 40, 50, 100]"
+              :total="total"
+              :current-page="queryData.page"
+              :page-size="queryData.pagesize"
+              @size-change="changeSize"
+              @current-change="changePage"
+            />
+          </el-tab-pane>
+
+          <el-tab-pane label="公司信息">
+            <!-- 公司信息 -->
+          </el-tab-pane>
+        </el-tabs>
+      </el-card>
     </div>
+
+    <!-- 添加角色的弹出框,没有单独写在一个组件中 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="isShowAddBox"
+      width="30%"
+    >
+      <!-- *************************** 这一段用的是el-form组件********************************************* -->
+      <el-form ref="roleForm" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入角色名称" />
+        </el-form-item>
+        <el-form-item label="角色描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入角色描述" />
+        </el-form-item>
+      </el-form>
+      <!-- ************************************************************************ -->
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="submitForm(form)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { reqGetRoleListAPI, reqDeleteRoleAPI, reqAddRoleAPI } from '@/api/settings.js'
 export default {
+  data() {
+    return {
+      // 下边分页中用到的数据
+      queryData: {
+        page: 1,
+        pagesize: 10
+      },
+      // 角色列表
+      list: [],
+      total: 0,
+      loading: true,
+      isShowAddBox: false, //  控制添加角色弹出框的显示与关闭
+      form: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
+      }
+    }
+  },
+  created() {
+    this.reqGetRoleList()
+  },
+  methods: {
+    // 提交表单
+    async submitForm(form) {
+      try {
+        // 提交表单,关闭弹窗,清空表单
+        const ret = await reqAddRoleAPI(form)
+        if (ret.code === 10000) {
+          // console.log(ret)
+          // 关闭弹窗 清空表单,重新渲染页面
+          this.isShowAddBox = false
+          // 重置表单,可以用this.$refs.roleForm.resetFields() 这个和prop有关系,只有加了prop属性的数据才能重置,没有加prop属性的数据并不能重置
+          // 也可以用this.$options.data().form,这个能重置所有的数据,但是并不会重置校验规则,上一次校验不通过报的红字,下一次点进去还在
+          // this.$options
+          // 所以可以结合上边的两种一起使用
+          this.$refs.roleForm.resetFields()
+          this.reqGetRoleList()
+          this.$message.success('添加角色成功')
+        } else {
+          this.$message.error('添加角色失败')
+        }
+      } catch {
+        this.$message.error('添加角色失败')
+      }
+    },
+    handleClose() {
+      this.isShowAddBox = false
+      // 关闭弹窗 清空表单
+      this.$refs.roleForm.resetFields()
+    },
+    // 删除角色
+    async reqDeleteRole(id) {
+      console.log(arguments) // 从这里能看到子组件中都有哪些数据,row下边有id
+      try {
+        const ret = this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).catch(err => err)
+        if (ret === 'cancle') return
+        // 下边是点击确定的情况
+        const result = await reqDeleteRoleAPI(id)
+        if (result.code === 10000) {
+          console.log('111')
+          // 重新渲染页面
+          this.reqGetRoleList()
+        } else {
+          this.$message.error('删除角色失败')
+        }
+      } catch {
+        this.$message.error('删除角色失败')
+      }
+    },
+    // 切换每页的条数
+    changeSize(size) {
+      // 这个形参,是Vue底层传过来的,点击哪个传哪个
+      // console.log(arguments) // 动态参数,来确认调用这个函数的@函数有几个形参
+      // console.log(size)
+      this.queryData.pagesize = size
+      // 重新渲染页面
+      this.reqGetRoleList()
+    },
+    // 切换页码的变化
+    changePage(page) {
+      // console.log(arguments)
+      console.log(page)
 
+      this.queryData.page = page
+      // 重新渲染页面
+      this.reqGetRoleList()
+    },
+    // 处理分页后的序号问题 ,这个序号问题,是在el-table组件上的,不是Pagination 分页上的属性
+    handleIndex(index) {
+      return this.queryData.pagesize * (this.queryData.page - 1) + index + 1
+    },
+    // 获取角色列表信息
+    async reqGetRoleList() {
+      try {
+        const ret = await reqGetRoleListAPI(this.queryData)
+        if (ret.code === 10000) {
+          // console.log(ret.code)
+          this.list = ret.data.rows
+          // 在分页管理中,左右箭头中的数字不变化,是因为这里没有给total赋值,total为0 ,
+          // 所以没办法给总页码进行分页
+          this.total = ret.data.total
+        }
+      } catch {
+        this.$message.error('获取所有角色列表失败')
+      } finally {
+        this.loading = false
+      }
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+
 </style>

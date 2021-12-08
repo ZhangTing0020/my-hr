@@ -20,10 +20,10 @@ import socialRouter from '@/router/modules/social'
 export const dynamicRoutes = [
   departmentsRouter,
   employeesRouter,
+  settingRouter,
   permissionRouter,
   attendancesRouter,
   salarysRouter,
-  settingRouter,
   approvalsRouter,
   socialRouter
 ]
