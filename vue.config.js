@@ -36,6 +36,7 @@ module.exports = {
       warnings: false,
       errors: true
     },
+
     // before: require('./mock/mock-server.js')
     // 配置代理,,,解决跨域问题******************************
     // 如果请求地址是 http://localhost:9528
@@ -43,8 +44,8 @@ module.exports = {
     proxy: {
       '^/api': {
         // target 的值表示被代理的目标地址
-        target: 'http://ihrm.itheima.net'
-        // target: 'http://ihrm-java.itheima.net'
+        // target: 'http://ihrm.itheima.net'
+        target: 'http://ihrm-java.itheima.net'
       }
     }
   },

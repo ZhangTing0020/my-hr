@@ -89,7 +89,7 @@ export default {
     // 编辑的资料
     plist: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   data() {
@@ -188,7 +188,9 @@ export default {
   computed: {
     getTitle() {
       if (this.plist !== null) {
-        this.form = this.plist
+        // 计算属性只要单纯的运算，依赖某些值，得到某个值。不要做其他的操作，赋值，修改dom等。真的需要操作就放到watch里面。
+        // this.form = { ...this.plist }
+
         // this.form.name = this.plist.name
         // this.form.id = this.plist.id
         // this.form.code = this.plist.code

@@ -58,7 +58,7 @@ const mutations = {
 
 const actions = {
   // action的返回值是Promise实例对象
-  async login({ commit }, userInfo) {
+  async login(store, userInfo) {
     const {
       username,
       password
@@ -70,7 +70,7 @@ const actions = {
     if (ret.code === 10000) {
       // console.log(ret)
       // 登录成功
-      commit('SET_TOKEN', ret.data)
+      store.commit('SET_TOKEN', ret.data)
       // 缓存token(存到Cookie中)
       setToken(ret.data)
       return Promise.resolve(true)

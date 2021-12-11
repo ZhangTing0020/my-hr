@@ -1,6 +1,11 @@
 // 定义一个组件
 // plugin中导入自己的组件并全局注册
 
+import PageTools from '@/components/PageTools'
+import moment from 'moment'
+
+import UploadExcel from '@/components/UploadExcel'
+import ImageUpload from '@/components/ImageUpload'
 const myImgerror = {
   install(Vue, options) {
     // console.log('111111', options)
@@ -19,6 +24,20 @@ const myImgerror = {
         }
       }
     })
+
+    // 全局注册组件\
+    Vue.component(PageTools.name, PageTools)
+    Vue.component(UploadExcel.name, UploadExcel) // 注册导入excel组件
+    Vue.component(ImageUpload.name, ImageUpload) // 注册导入上传组件
+
+    // 全局注册过滤器
+    // 参数1:过滤器名 ,参数2:回调函数
+    Vue.filter('formatTime', (value) => {
+      // value 原数据流
+      return moment(value).format('yyyy-MM-DD')
+    })
+
+    // Vue.component('PageTools', PageTools) // 注册工具栏组件
   }
 }
 

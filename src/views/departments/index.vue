@@ -3,11 +3,23 @@
     <div class="dashboard-container">
       <el-card class="tree-card">
         <!-- tree-tools 子组件通知父组件打开弹窗 -->
-        <tree-tools :node-data="titleData" @on-open="toggleAddDept" @edit-dept="handleOpen" />
+        <tree-tools
+          :node-data="titleData"
+          @on-open="toggleAddDept"
+          @edit-dept="handleOpen"
+        />
         <!-- 树形菜单 -->
         <el-tree :data="departs" :props="defaultProps">
           <!-- 中间的代码就是插槽内容，用于定制每一行的布局效果 -->
           <template v-slot="scope">
+            <!-- 打印作用域插槽传过来的数据 -->
+            <!-- <tree-tools
+              :node-data="scope.data"
+              @on-success="onSuccess"
+              @on-open="toggleAddDept"
+              @edit-dept="handleOpen"
+            >{{ displayScope(scope) }} </tree-tools> -->
+
             <tree-tools
               :node-data="scope.data"
               @on-success="onSuccess"
@@ -87,9 +99,11 @@ export default {
   created() {
     this.loadDepartmentsList()
     // this.ceshi()
+    //
   },
   methods: {
     async handleOpen(id) {
+      console.log(arguments)
       try {
         const ret = await editDepartmentAPI(id)
         console.log(ret)
@@ -106,7 +120,7 @@ export default {
     onSuccess() {
       this.loadDepartmentsList()
     },
-    // 测试用的函数,为了看el-tree返回的数据
+    // 测试用的函数,为了看el-tree组件返回的scope数据
     displayScope(scope) {
       console.log('el-tree返回的数据', scope)
     },
@@ -160,7 +174,6 @@ export default {
     //   }
     //   console.log('空数组不能调用空数组') // 打印这个
     // }
-
   }
 }
 </script>

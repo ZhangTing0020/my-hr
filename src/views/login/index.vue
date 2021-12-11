@@ -58,8 +58,8 @@
       </el-form-item>
 
       <el-button
-        class="login-btn"
         :loading="loading"
+        class="login-btn"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
@@ -138,7 +138,7 @@ export default {
       // 手动校验表单
       // ref可以操作原生DOM；也可以操作组件实例
       this.$refs.loginForm.validate(async (valid) => {
-        console.log('11111111111111')
+        // console.log('11111111111111')
         // 验证如果不通过，就终止后续代码
         if (!valid) {
           console.log('验证不通过')
@@ -148,7 +148,7 @@ export default {
         this.loading = true
         // 触发action实现登录（action的返回值是Promise实例对象）
         try {
-          console.log('22222222')
+          // console.log('22222222')
           const res = await this.login(this.loginForm)
           if (res) this.$message.success('登录成功')
           // 跳转到首页
