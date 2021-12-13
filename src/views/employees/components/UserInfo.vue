@@ -251,7 +251,8 @@ export default {
         username: '', // 姓名
         departmentName: '', // 部门
         mobile: '', // 手机
-        formOfEmployment: '' // 聘用形式
+        formOfEmployment: '', // 聘用形式
+        staffPhoto: '' // 图片
       },
       formData: {
         userId: '',
