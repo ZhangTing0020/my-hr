@@ -93,7 +93,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="handleRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="reqDelEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -115,6 +115,9 @@
 
     <!-- 弹窗组件 新增员工的dialog-->
     <add-employee :show-dialog.sync="isShow" @closeDialog="closeDialog" />
+
+    <!-- 分配角色弹窗 -->
+    <AssignRole :user-id="userId" :show-role-dialog.sync="showRoleDialog" />
   </div>
 </template>
 
@@ -125,11 +128,13 @@ import { reqGetEmployeeListAPI, reqDelEmployeeAPI } from '@/api/employees.js'
 import AddEmployee from './components/AddEmployee'
 import typeEnum from '@/api/constant/employees.js'
 import moment from 'moment'
+import AssignRole from './components/assign-role.vue'
 export default {
   name: 'Employees',
   // 局部注册,用的是filters 全局注册用的是Vue.filter
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
   filters: {
     formatType(value) {
@@ -149,13 +154,22 @@ export default {
         size: 10
       },
       total: 0,
-      list: []
+      list: [],
+      // 当前分配角色的用户id
+      userId: '',
+      // 控制分配角色弹窗
+      showRoleDialog: false
     }
   },
   created() {
     this.reqGetEmployeeList()
   },
   methods: {
+    // 给用户分配角色
+    handleRole (id) {
+      this.userId = id
+      this.showRoleDialog = true
+    },
     getExportData(headers, list) {
       // 根据对应关系,获取转换之后的数据
       const result = []

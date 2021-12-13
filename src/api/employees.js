@@ -94,3 +94,12 @@ export function reqImportEmployee(data) {
     data
   })
 }
+
+// 分配角色给用户
+export function reqAssignRoles(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    data,
+    method: 'put'
+  })
+}
