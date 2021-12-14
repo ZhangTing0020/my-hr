@@ -36,8 +36,20 @@ const cos = new COS({
 export default {
   // 这里如果不写name属性,在全局注册组件的时候,取其name属性,就会报错,Cannot read properties of undefined (reading ‘toLowerCase‘)
   name: 'ImageUpload',
+  props: {
+    // 从父组件传过来的数据,是数组包字符串,但是
+    defaultImage: {
+      type: Array,
+      required: true
+    },
+    limit: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
+
       fileList: [
         {
           url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
@@ -51,6 +63,19 @@ export default {
     isLen() {
       // 这里会返回true 或者false 在上边动态绑定类名的时候,就根据true或者false来判断类名是否生效
       return this.fileList.length >= 1
+    }
+  },
+  watch: {
+    // 父组件传过来得数据是数组包字符串
+    // 这里需要得是数组包对象
+    // 怎么确定哪里需要得数据类型是什么呢????????????????
+    // 因为腾讯云返回的每一张图片的数据都是一个对象,要保存在vue变量的fileList中,所以需要的就是数组包对象嘛?所以在这里需要转化一下
+    defaultImage(urls) {
+      this.fileList = urls.map((url) => {
+        return {
+          url: url
+        }
+      })
     }
   },
   methods: {
@@ -108,7 +133,7 @@ export default {
                 // 箭头函数,如果函数体只有一行的话,是可以省略{} 和return的,默认是会return的
                 return item.uid === params.file.uid
               })
-              console.log(fileInfo)
+              // console.log(fileInfo)
               if (fileInfo) {
                 // 之前action自动上传的时候,当文件上传成功之后,,,图片右上角会有一个绿色的对勾,,,这里涉及到一个状态   on-change这个属性上绑定的函数的参数file中 status: "ready"  当图片上传成功之后,会将状态置为success
                 // 如果fileInfo非空,并且是上传到腾讯云是成功的,就将status

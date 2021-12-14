@@ -48,7 +48,8 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <ImageUpload />
+            <!-- 父传子,传递给ImageUpload这个组件 ,传递默认图片 -->
+            <ImageUpload :default-image="[userInfo.staffPhoto]" :limit="1" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -355,6 +356,7 @@ export default {
         this.$message.error('获取用户详细信息失败')
       }
     },
+    // 上边的表单
     async saveUser () {
       try {
         const ret = await reqSaveUserDetailById(this.userInfo)
