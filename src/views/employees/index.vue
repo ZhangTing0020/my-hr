@@ -30,6 +30,19 @@
           <el-table-column label="姓名" prop="username" sortable="" />
           <el-table-column label="工号" prop="workNumber" sortable="" />
 
+          <!-- 添加一列  显示头像 -->
+          <el-table-column label="头像" prop="staffPhoto" sortable="">
+            <!-- 这里要用到作用域插槽???为什么 什么时候要用作用域插槽,什么时候不用 -->
+            <!-- 要用到子组件内的数据,这里是需要一个id??? -->
+            <template v-slot="scope">
+              <!-- <button @click="ceshiScope(scope)" /> -->
+              <el-image :src="scope.row.staffPhoto">
+                <div slot="placeholder">
+                  <image class="staff" :src="defaultImg" />
+                </div>
+              </el-image>
+            </template>
+          </el-table-column>
           <!-- 方法3 - 基于element UI中的 formatter属性-->
 
           <el-table-column
@@ -158,13 +171,17 @@ export default {
       // 当前分配角色的用户id
       userId: '',
       // 控制分配角色弹窗
-      showRoleDialog: false
+      showRoleDialog: false,
+      defaultImg: 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2146034403,1504718527&fm=26&gp=0.jpg'
     }
   },
   created() {
     this.reqGetEmployeeList()
   },
   methods: {
+    ceshiScope(scope) {
+      console.log(scope)
+    },
     // 给用户分配角色
     handleRole (id) {
       this.userId = id
@@ -348,4 +365,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.employees-container {
+  .staff {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+}
 </style>
