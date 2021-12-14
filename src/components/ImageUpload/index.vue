@@ -40,7 +40,7 @@ export default {
   props: {
     // 从父组件传过来的数据,是数组包字符串,但是
     defaultImage: {
-      type: Array,
+      type: [Array, String],
       required: true
     },
     limit: {
@@ -72,12 +72,43 @@ export default {
     // 这里需要得是数组包对象
     // 怎么确定哪里需要得数据类型是什么呢????????????????
     // 因为腾讯云返回的每一张图片的数据都是一个对象,要保存在vue变量的fileList中,所以需要的就是数组包对象嘛?所以在这里需要转化一下
+    // defaultImage(urls) {
+    //   this.fileList = urls.map((url) => {
+    //     return {
+    //       url: url
+    //     }
+    //   })
+    // }
+
     defaultImage(urls) {
-      this.fileList = urls.map((url) => {
-        return {
-          url: url
-        }
-      })
+      // Array.isArray(urls)   isArray 判断类型是不是数组,是的话就返回true  否则返回false
+      // typeof判断类型的时候,所得到的值都是小写字母,并且是字符串
+      // if (typeof (urls) === Object) {
+      //   this.fileList = urls.map((url) => {
+      //     return {
+      //       url: url
+      //     }
+      //   })
+      // }
+      // // 下边这是为了判断如果父组件传来的是字符串,就将字符串变成数组包对象
+      // if (typeof (urls) === String) {
+      //   // 将字符串变成数组包对象
+      //   this.fileList = [{ url: urls }]
+      // }
+      // }
+
+      if (typeof (urls) === 'object') {
+        this.fileList = urls.map((url) => {
+          return {
+            url: url
+          }
+        })
+      }
+      // 下边这是为了判断如果父组件传来的是字符串,就将字符串变成数组包对象
+      if (typeof (urls) === 'string') {
+        // 将字符串变成数组包对象
+        this.fileList = [{ url: urls }]
+      }
     }
   },
   methods: {

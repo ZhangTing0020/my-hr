@@ -59,9 +59,17 @@
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
             <!-- 父传子,传递给ImageUpload这个组件 ,传递默认图片 -->
-            <ImageUpload
+            <!-- 为什么无论是基础信息和详细信息,只要输入框中的值改变了,,,这个图片都会跟着闪
+            但是下边的头像却不会闪呢???并且下边的头像传的也是数组呀 -->
+            <!-- <ImageUpload
               ref="mystaff"
               :default-image="[userInfo.staffPhoto]"
+              :limit="1"
+            /> -->
+
+            <ImageUpload
+              ref="mystaff"
+              :default-image="userInfo.staffPhoto?userInfo.staffPhoto:''"
               :limit="1"
             />
           </el-form-item>
@@ -483,7 +491,8 @@ export default {
         isThereAnyCompetitionRestriction: '', // 有无竞业限制
         proofOfDepartureOfFormerCompany: '', // 前公司离职证明
         remarks: '' // 备注
-      }
+      },
+      urlList: [] // 传给子组件的数组(传递多张图片)
     }
   },
   computed: {
@@ -526,6 +535,8 @@ export default {
           this.$message.error(ret.message)
         } else {
           this.formData = ret.data
+          // 刚开始没有设置用户头像,,,所以staffPhoto就是空字符串,,,直接分解是会报错的
+          // 在这里判空了
           if (ret.data.staffPhoto) {
           // 获取多张员工照片
             this.urlList = ret.data.staffPhoto.split(';')
@@ -564,6 +575,7 @@ export default {
       const photos = successList.map((item) => {
         return item.url
       })
+      // staffPhoto 是一个字符串
       const staffPhoto = photos.join(';')
       try {
         console.log(this.formData, this.userId)
