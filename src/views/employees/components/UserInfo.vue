@@ -11,7 +11,12 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="入职时间">
-            <el-date-picker v-model="userInfo.timeOfEntry" type="date" class="inputW" value-format="YYYY-MM-DD" />
+            <el-date-picker
+              v-model="userInfo.timeOfEntry"
+              type="date"
+              class="inputW"
+              value-format="YYYY-MM-DD"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -38,7 +43,12 @@
         <el-col :span="12">
           <el-form-item label="聘用形式">
             <el-select v-model="userInfo.formOfEmployment" class="inputW">
-              <el-option v-for="item in EmployeeEnum.hireType" :key="item.id" :label="item.value" :value="item.id" />
+              <el-option
+                v-for="item in EmployeeEnum.hireType"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -49,7 +59,11 @@
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
             <!-- 父传子,传递给ImageUpload这个组件 ,传递默认图片 -->
-            <ImageUpload :default-image="[userInfo.staffPhoto]" :limit="1" />
+            <ImageUpload
+              ref="mystaff"
+              :default-image="[userInfo.staffPhoto]"
+              :limit="1"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -58,7 +72,6 @@
         <el-col :span="12">
           <el-button type="primary" @click="saveUser">保存更新</el-button>
           <el-button @click="$router.back()">返回</el-button>
-
         </el-col>
       </el-row>
     </el-form>
@@ -68,8 +81,16 @@
       <div class="block">
         <div class="title">基础信息</div>
         <el-form-item label="最高学历">
-          <el-select v-model="formData.theHighestDegreeOfEducation" class="inputW2">
-            <el-option v-for="item in EmployeeEnum.highestDegree" :key="item.value" :label="item.label" :value="item.value" />
+          <el-select
+            v-model="formData.theHighestDegreeOfEducation"
+            class="inputW2"
+          >
+            <el-option
+              v-for="item in EmployeeEnum.highestDegree"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <!-- 个人头像 -->
@@ -77,43 +98,90 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+
+          <!-- urlList本身就是一个数组,不用包[] -->
+          <ImageUpload
+            ref="employeesImg"
+            :default-image="urlList"
+            :limit="3"
+          />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
-            <el-option v-for="item in EmployeeEnum.isOverseas" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in EmployeeEnum.isOverseas"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="护照号">
-          <el-input v-model="formData.passportNo" placeholder="正规护照格式" class="inputW" />
+          <el-input
+            v-model="formData.passportNo"
+            placeholder="正规护照格式"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="身份证号">
-          <el-input v-model="formData.idNumber" placeholder="正规身份证格式" class="inputW" />
+          <el-input
+            v-model="formData.idNumber"
+            placeholder="正规身份证格式"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="籍贯">
-          <el-input v-model="formData.nativePlace" placeholder="籍贯地址" class="inputW5" />
+          <el-input
+            v-model="formData.nativePlace"
+            placeholder="籍贯地址"
+            class="inputW5"
+          />
         </el-form-item>
         <el-form-item label="民族">
-          <el-input v-model="formData.nation" placeholder="请输入民族" class="inputW2" />
+          <el-input
+            v-model="formData.nation"
+            placeholder="请输入民族"
+            class="inputW2"
+          />
         </el-form-item>
         <el-form-item label="婚姻状况">
           <el-select v-model="formData.maritalStatus" class="inputW2">
-            <el-option v-for="item in EmployeeEnum.maritaStatus" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in EmployeeEnum.maritaStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="生日">
-          <el-input v-model="formData.birthday" placeholder="示例 0323" class="inputW" />
+          <el-input
+            v-model="formData.birthday"
+            placeholder="示例 0323"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="年龄">
           <el-input v-model="formData.age" type="number" class="inputW2" />
         </el-form-item>
         <el-form-item label="星座">
           <el-select v-model="formData.constellation" class="inputW2">
-            <el-option v-for="item in EmployeeEnum.constellation" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in EmployeeEnum.constellation"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="血型">
           <el-select v-model="formData.bloodType" class="inputW2">
-            <el-option v-for="item in EmployeeEnum.bloodType" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in EmployeeEnum.bloodType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="户籍所在地">
@@ -123,10 +191,19 @@
           <el-input v-model="formData.politicalOutlook" class="inputW2" />
         </el-form-item>
         <el-form-item label="入党时间">
-          <el-date-picker v-model="formData.timeToJoinTheParty" type="date" placeholder="选择日期" class="inputW" value-format="yyyy-MM-dd" />
+          <el-date-picker
+            v-model="formData.timeToJoinTheParty"
+            type="date"
+            placeholder="选择日期"
+            class="inputW"
+            value-format="yyyy-MM-dd"
+          />
         </el-form-item>
         <el-form-item label="存档机构">
-          <el-input v-model="formData.archivingOrganization" placeholder="请输入" />
+          <el-input
+            v-model="formData.archivingOrganization"
+            placeholder="请输入"
+          />
         </el-form-item>
         <el-form-item label="子女状态">
           <el-input v-model="formData.stateOfChildren" placeholder="请输入" />
@@ -138,10 +215,16 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="有无违法违纪状态">
-          <el-input v-model="formData.isThereAnyViolationOfLawOrDiscipline" placeholder="请输入" />
+          <el-input
+            v-model="formData.isThereAnyViolationOfLawOrDiscipline"
+            placeholder="请输入"
+          />
         </el-form-item>
         <el-form-item label="有无重大病史">
-          <el-input v-model="formData.areThereAnyMajorMedicalHistories" placeholder="请输入" />
+          <el-input
+            v-model="formData.areThereAnyMajorMedicalHistories"
+            placeholder="请输入"
+          />
         </el-form-item>
       </div>
       <!-- 通讯信息 -->
@@ -151,7 +234,11 @@
           <el-input v-model="formData.qq" placeholder="请输入" class="inputW" />
         </el-form-item>
         <el-form-item label="微信">
-          <el-input v-model="formData.wechat" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.wechat"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="现居住地">
           <el-input v-model="formData.placeOfResidence" placeholder="请输入" />
@@ -160,32 +247,67 @@
           <el-input v-model="formData.postalAddress" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="联系手机">
-          <el-input v-model="formData.contactTheMobilePhone" placeholder="11位字符" maxlength="11" class="inputW" @change.native="handlePhone(2)" />
+          <el-input
+            v-model="formData.contactTheMobilePhone"
+            placeholder="11位字符"
+            maxlength="11"
+            class="inputW"
+            @change.native="handlePhone(2)"
+          />
         </el-form-item>
         <el-form-item label="个人邮箱">
-          <el-input v-model="formData.personalMailbox" placeholder="请输入" type="mail" class="inputW" />
+          <el-input
+            v-model="formData.personalMailbox"
+            placeholder="请输入"
+            type="mail"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="紧急联系人">
-          <el-input v-model="formData.emergencyContact" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.emergencyContact"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="紧急联系电话">
-          <el-input v-model="formData.emergencyContactNumber" placeholder="11位字符" class="inputW" />
+          <el-input
+            v-model="formData.emergencyContactNumber"
+            placeholder="11位字符"
+            class="inputW"
+          />
         </el-form-item>
       </div>
       <!-- 账号信息 -->
       <div class="block">
         <div class="title">账号信息</div>
         <el-form-item label="社保电脑号">
-          <el-input v-model="formData.socialSecurityComputerNumber" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.socialSecurityComputerNumber"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="公积金账号">
-          <el-input v-model="formData.providentFundAccount" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.providentFundAccount"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="银行卡号">
-          <el-input v-model="formData.bankCardNumber" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.bankCardNumber"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="开户行">
-          <el-input v-model="formData.openingBank" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.openingBank"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
       </div>
       <!-- 教育信息 -->
@@ -193,36 +315,78 @@
         <div class="title">教育信息</div>
         <el-form-item label="学历类型">
           <el-select v-model="formData.educationalType" placeholder="请选择">
-            <el-option v-for="item in EmployeeEnum.educationType" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in EmployeeEnum.educationType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="毕业学校">
-          <el-input v-model="formData.graduateSchool" placeholder="请输入" class="inputW2" />
+          <el-input
+            v-model="formData.graduateSchool"
+            placeholder="请输入"
+            class="inputW2"
+          />
         </el-form-item>
         <el-form-item label="入学时间">
-          <el-date-picker v-model="formData.enrolmentTime" type="data" placeholder="请输入时间" class="inputW" value-format="yyyy-MM-dd" />
+          <el-date-picker
+            v-model="formData.enrolmentTime"
+            type="data"
+            placeholder="请输入时间"
+            class="inputW"
+            value-format="yyyy-MM-dd"
+          />
         </el-form-item>
         <el-form-item label="毕业时间">
-          <el-date-picker v-model="formData.graduationTime" type="data" placeholder="请输入时间" class="inputW" value-format="yyyy-MM-dd" />
+          <el-date-picker
+            v-model="formData.graduationTime"
+            type="data"
+            placeholder="请输入时间"
+            class="inputW"
+            value-format="yyyy-MM-dd"
+          />
         </el-form-item>
         <el-form-item label="专业">
-          <el-input v-model="formData.major" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.major"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
       </div>
       <!-- 从业信息 -->
       <div class="block">
         <div class="title">从业信息</div>
         <el-form-item label="上家公司">
-          <el-input v-model="formData.homeCompany" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.homeCompany"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="职称">
-          <el-input v-model="formData.title" placeholder="请输入" class="inputW" />
+          <el-input
+            v-model="formData.title"
+            placeholder="请输入"
+            class="inputW"
+          />
         </el-form-item>
         <el-form-item label="有无竞业限制">
-          <el-input v-model="formData.isThereAnyCompetitionRestriction" placeholder="请输入" style="width:80%" />
+          <el-input
+            v-model="formData.isThereAnyCompetitionRestriction"
+            placeholder="请输入"
+            style="width: 80%"
+          />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="formData.remarks" type="textarea" placeholder="请输入备注" style="width:80%" />
+          <el-input
+            v-model="formData.remarks"
+            type="textarea"
+            placeholder="请输入备注"
+            style="width: 80%"
+          />
         </el-form-item>
         <!-- 保存员工信息 -->
         <el-row class="inline-info" type="flex" justify="center">
@@ -233,17 +397,19 @@
         </el-row>
       </div>
     </el-form>
-
   </div>
-
 </template>
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-import { reqGetPersonalDetail, reqUpdatePersonal, reqSaveUserDetailById } from '@/api/employees'
+import {
+  reqGetPersonalDetail,
+  reqUpdatePersonal,
+  reqSaveUserDetailById
+} from '@/api/employees'
 import { getDetailInfo } from '@/api/user'
 
 export default {
-  data () {
+  data() {
     return {
       EmployeeEnum, // 员工枚举数据
       userInfo: {
@@ -321,17 +487,17 @@ export default {
     }
   },
   computed: {
-    userId () {
+    userId() {
       return this.$route.params.id
     }
   },
-  created () {
+  created() {
     this.getUserBaseInfo()
     this.getUserDetailInfo()
   },
   methods: {
     // 获取员工基本信息（上面的表单）
-    async getUserBaseInfo () {
+    async getUserBaseInfo() {
       try {
         const ret = await getDetailInfo(this.userId)
         if (!ret.success) {
@@ -344,22 +510,41 @@ export default {
       }
     },
     // 获取详细信息（下面的表单）
-    async getUserDetailInfo () {
+    async getUserDetailInfo() {
       try {
         const ret = await reqGetPersonalDetail(this.userId)
+        // 后台返回多张图片的话,是用 ; 号隔开的,所以要用 ; 进行拆分
+        console.log(ret)
+        // https://my-hr-1308732703.cos.ap-beijing.myqcloud.com/logo.png;
+        // https://my-hr-1308732703.cos.ap-beijing.myqcloud.com/connections.29008726.png
+        // 将字符串分割成数组(包字符串)
+        // this.formData.staffPhoto = photo 这里不对  staffPhoto是字符串,不是数组,
+        // 所以直接将生成的数组传到子组件中,在子组件进行
+        // 获取员工的照片（如果是多张图片，会把多个url地址用;隔开）
+
         if (!ret.success) {
           this.$message.error(ret.message)
         } else {
           this.formData = ret.data
+          if (ret.data.staffPhoto) {
+          // 获取多张员工照片
+            this.urlList = ret.data.staffPhoto.split(';')
+          }
         }
       } catch {
         this.$message.error('获取用户详细信息失败')
       }
     },
     // 上边的表单
-    async saveUser () {
+    async saveUser() {
+      // this.$refs.mystaff.fileList 从子组件中拿到的数据是数组包对象
+      const fileList = this.$refs.mystaff.fileList
+      console.log(fileList[0].url)
       try {
-        const ret = await reqSaveUserDetailById(this.userInfo)
+        const ret = await reqSaveUserDetailById({
+          ...this.userInfo,
+          staffPhoto: fileList[0].url
+        })
         if (!ret.success) {
           this.$message.error(ret.message)
         } else {
@@ -369,13 +554,24 @@ export default {
         this.$message.error('更新用户基本信息失败')
       }
     },
-    async savePersonal () {
+    async savePersonal() {
+      const fileList = this.$refs.employeesImg.fileList
+      const successList = fileList.filter((item) => item.status === 'success')
+      // successList是一个数组包对象
+      if (successList.length === 0) return this.$message.error('请先上传图片')
+      // 如果上传了多张图片的话,就要进行拼接,具体是用什么符号链接,是需要和后端进行沟通的
+      // 从子组件拿过来的数据是数组包对象,所以先要改成数组包url字符串
+      const photos = successList.map((item) => {
+        return item.url
+      })
+      const staffPhoto = photos.join(';')
       try {
         console.log(this.formData, this.userId)
         const ret = await reqUpdatePersonal({
           ...this.formData,
           // 当前修改的用户的id
-          id: this.userId
+          id: this.userId,
+          staffPhoto
         })
         if (!ret.success) {
           this.$message.error(ret.message)

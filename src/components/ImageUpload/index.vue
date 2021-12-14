@@ -2,6 +2,7 @@
   <div class="upload-box">
     <!-- 怎么动态绑定类名??????????????? -->
     <!-- 三种方法 1.直接绑定   2.三元表达式绑定   3.对象绑定    下边的class就是用的对象绑定 -->
+    <!-- 下边这几个属性触发的时机,谁先谁后呢????????? -->
     <el-upload
       :on-preview="preview"
       :file-list="fileList"
@@ -52,7 +53,8 @@ export default {
 
       fileList: [
         {
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          // url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          // 这里没有了默认值,为什么没有图片的时候,页面中会显示一个空白图片,并且右上角有绿色对勾
         }
       ],
       showDialog: false, // 控制显示弹层
@@ -62,7 +64,7 @@ export default {
   computed: {
     isLen() {
       // 这里会返回true 或者false 在上边动态绑定类名的时候,就根据true或者false来判断类名是否生效
-      return this.fileList.length >= 1
+      return this.fileList.length >= this.limit
     }
   },
   watch: {
@@ -141,7 +143,13 @@ export default {
                 // fileInfo[0].status = 'success'
                 fileInfo.status = 'success'
                 // 将腾讯云返回的图片地址赋值给vue变量fileList 传递给后端
-                this.fileList.url = 'https://' + fileInfo.Location
+                // 最终最终最终 vue变量fileList中url存的值是这个,用的是这个地址去给后端
+                // 所以在父组件中,应该要拿到这个url地址,在父组件ImageUpload上绑定ref属性,然后
+                // this.$refs.XXX.fileList就能拿到这个值了
+                // *************************************
+                // this.fileList.url = 'https://' + data.Location 这里为什么不是给this.fileList.url赋值,而是给fileInfo.url赋值   而fileInfo.url又是怎么和fileList.url产生联系的??????是watch监听函数嘛?????
+                fileInfo.url = 'https://' + data.Location
+                console.log(this.fileList.url) // undefined
               }
             } else {
               this.$message.error('图片上传失败')
