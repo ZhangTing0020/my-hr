@@ -11,6 +11,9 @@ const myImgerror = {
     // console.log('111111', options)
     Vue.directive('imgerror', {
       inserted(el, bindings) {
+        // 处理图片路劲是null的情况
+        if (!el.src) el.src = bindings.value || options.default
+
         // console.log(el)
         // el表示绑定该指令的DOM元素
         // bindings表示指令相关的信息 bindings.value
@@ -22,6 +25,13 @@ const myImgerror = {
           // 如果图片加载失败,就要给src属性重新赋值
           el.setAttribute('src', bindings.value || options.default)
         }
+      },
+      // 如果img的src的属性值是null,那么不会发送请求，也不会触发onerror事件
+      // componentUpdated触发的条件：绑定指令的标签依赖的数据发生变更时
+      componentUpdated (el, bindings) {
+        // console.log('----------------------------')
+        // console.log(options)
+        el.setAttribute('src', el.src || bindings.value || options.default)
       }
     })
 

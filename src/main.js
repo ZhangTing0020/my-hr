@@ -22,6 +22,8 @@ import '@/permission' // permission control
 
 import myPlugin from './utils/plugin.js'
 import defaultImg from '@/assets/common/head.jpg'
+// 如果在Vue.use方法的第二个参数传递一个数据，那么传递给了谁？install方法的第二个参数
+
 Vue.use(myPlugin, { default: defaultImg })
 
 // 实现模拟接口的功能（用js代码写的假的临时接口）

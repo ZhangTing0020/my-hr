@@ -31,16 +31,19 @@
           <el-table-column label="工号" prop="workNumber" sortable="" />
 
           <!-- 添加一列  显示头像 -->
-          <el-table-column label="头像" prop="staffPhoto" sortable="">
+          <el-table-column label="头像" sortable="">
             <!-- 这里要用到作用域插槽???为什么 什么时候要用作用域插槽,什么时候不用 -->
-            <!-- 要用到子组件内的数据,这里是需要一个id??? -->
+            <!-- 要用到子组件内的数据,这里是需要一个staffPhoto -->
             <template v-slot="scope">
               <!-- <button @click="ceshiScope(scope)" /> -->
-              <el-image :src="scope.row.staffPhoto">
-                <div slot="placeholder">
-                  <image class="staff" :src="defaultImg" />
-                </div>
-              </el-image>
+              <!-- 自定义指令v-imgerror,如果赋值给src的值是null，那么不会触发请求，那么也不会触发onerror事件 -->
+              <!-- 图片标签是img  不是image 因为写成了image 图像不显示 -->
+              <img
+                v-imgerror
+                :src="scope.row.staffPhoto"
+                style="width: 50px; height: 50px; border-radius: 25px"
+                alt=""
+              >
             </template>
           </el-table-column>
           <!-- 方法3 - 基于element UI中的 formatter属性-->
@@ -96,18 +99,28 @@
                   inactive-color="lightgrey"
                 />
               </div>
-
             </template>
-
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template v-slot="{row}">
-              <el-button type="text" size="small" @click="$router.push('/employees/detail/'+row.id)">查看</el-button>
+            <template v-slot="{ row }">
+              <el-button
+                type="text"
+                size="small"
+                @click="$router.push('/employees/detail/' + row.id)"
+              >查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small" @click="handleRole(row.id)">角色</el-button>
-              <el-button type="text" size="small" @click="reqDelEmployee(row.id)">删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleRole(row.id)"
+              >角色</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="reqDelEmployee(row.id)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -172,7 +185,8 @@ export default {
       userId: '',
       // 控制分配角色弹窗
       showRoleDialog: false,
-      defaultImg: 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2146034403,1504718527&fm=26&gp=0.jpg'
+      defaultImg:
+        'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2146034403,1504718527&fm=26&gp=0.jpg'
     }
   },
   created() {
@@ -183,15 +197,15 @@ export default {
       console.log(scope)
     },
     // 给用户分配角色
-    handleRole (id) {
+    handleRole(id) {
       this.userId = id
       this.showRoleDialog = true
     },
     getExportData(headers, list) {
       // 根据对应关系,获取转换之后的数据
       const result = []
-      list.forEach(item => {
-        const row = []// 产生一行数据
+      list.forEach((item) => {
+        const row = [] // 产生一行数据
         // 如果这里来遍历item对象,获取到的中文名有的就是undefined
         // 因为headers数组中,并不是导出所有的值,headers中有几项数据,就在后端返回的数中,挑出这几个数据展示在execl中
         // 所以必须来遍历headers对象
@@ -246,13 +260,13 @@ export default {
       //   'departmentName': '部门'
       // }
       const headers = {
-        '姓名': 'username',
-        '手机号': 'mobile',
-        '入职日期': 'timeOfEntry',
-        '聘用形式': 'formOfEmployment',
-        '转正日期': 'correctionTime',
-        '工号': 'workNumber',
-        '部门': 'departmentName'
+        姓名: 'username',
+        手机号: 'mobile',
+        入职日期: 'timeOfEntry',
+        聘用形式: 'formOfEmployment',
+        转正日期: 'correctionTime',
+        工号: 'workNumber',
+        部门: 'departmentName'
       }
       const rawData = await reqGetEmployeeListAPI({
         page: 1,
@@ -263,7 +277,7 @@ export default {
       // Object.keys 是ES6提供的函数用于获取对象的所有的key，最终形成数组
       const title = Object.keys(headers)
       // 也就是说,路由懒加载的返回值是一个promise实例
-      import('@/vendor/Export2Excel').then(excel => {
+      import('@/vendor/Export2Excel').then((excel) => {
         excel.export_json_to_excel({
           // 这里暂时是假数据,需要做一个数据转换,才能导出,这里写的就是转换之后的数据
           // data中需要的是二维数组
@@ -348,7 +362,7 @@ export default {
     async reqGetEmployeeList() {
       try {
         const ret = await reqGetEmployeeListAPI(this.queryData)
-        console.log(ret)
+        // console.log(ret)
         if (ret.code === 10000) {
           this.list = ret.data.rows
           this.total = ret.data.total
