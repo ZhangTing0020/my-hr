@@ -48,7 +48,11 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <ImageUpload />
+            <ImageUpload
+              ref="mystaff"
+              :default-image="[userInfo.staffPhoto]"
+              :limit="1"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,6 +80,13 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+
+          <!-- urlList本身就是一个数组,不用包[] -->
+          <ImageUpload
+            ref="employeesImg"
+            :default-image="urlList"
+            :limit="3"
+          />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -316,21 +327,22 @@ export default {
         isThereAnyCompetitionRestriction: '', // 有无竞业限制
         proofOfDepartureOfFormerCompany: '', // 前公司离职证明
         remarks: '' // 备注
-      }
+      },
+      urlList: [] // 传给子组件的数组(传递多张图片)
     }
   },
   computed: {
-    userId () {
+    userId() {
       return this.$route.params.id
     }
   },
-  created () {
+  created() {
     this.getUserBaseInfo()
     this.getUserDetailInfo()
   },
   methods: {
     // 获取员工基本信息（上面的表单）
-    async getUserBaseInfo () {
+    async getUserBaseInfo() {
       try {
         const ret = await getDetailInfo(this.userId)
         if (!ret.success) {
@@ -343,21 +355,43 @@ export default {
       }
     },
     // 获取详细信息（下面的表单）
-    async getUserDetailInfo () {
+    async getUserDetailInfo() {
       try {
         const ret = await reqGetPersonalDetail(this.userId)
+        // 后台返回多张图片的话,是用 ; 号隔开的,所以要用 ; 进行拆分
+        console.log(ret)
+        // https://my-hr-1308732703.cos.ap-beijing.myqcloud.com/logo.png;
+        // https://my-hr-1308732703.cos.ap-beijing.myqcloud.com/connections.29008726.png
+        // 将字符串分割成数组(包字符串)
+        // this.formData.staffPhoto = photo 这里不对  staffPhoto是字符串,不是数组,
+        // 所以直接将生成的数组传到子组件中,在子组件进行
+        // 获取员工的照片（如果是多张图片，会把多个url地址用;隔开）
+
         if (!ret.success) {
           this.$message.error(ret.message)
         } else {
           this.formData = ret.data
+          // 刚开始没有设置用户头像,,,所以staffPhoto就是空字符串,,,直接分解是会报错的
+          // 在这里判空了
+          if (ret.data.staffPhoto) {
+          // 获取多张员工照片
+            this.urlList = ret.data.staffPhoto.split(';')
+          }
         }
       } catch {
         this.$message.error('获取用户详细信息失败')
       }
     },
-    async saveUser () {
+    // 上边的表单
+    async saveUser() {
+      // this.$refs.mystaff.fileList 从子组件中拿到的数据是数组包对象
+      const fileList = this.$refs.mystaff.fileList
+      console.log(fileList[0].url)
       try {
-        const ret = await reqSaveUserDetailById(this.userInfo)
+        const ret = await reqSaveUserDetailById({
+          ...this.userInfo,
+          staffPhoto: fileList[0].url
+        })
         if (!ret.success) {
           this.$message.error(ret.message)
         } else {
@@ -367,13 +401,25 @@ export default {
         this.$message.error('更新用户基本信息失败')
       }
     },
-    async savePersonal () {
+    async savePersonal() {
+      const fileList = this.$refs.employeesImg.fileList
+      const successList = fileList.filter((item) => item.status === 'success')
+      // successList是一个数组包对象
+      if (successList.length === 0) return this.$message.error('请先上传图片')
+      // 如果上传了多张图片的话,就要进行拼接,具体是用什么符号链接,是需要和后端进行沟通的
+      // 从子组件拿过来的数据是数组包对象,所以先要改成数组包url字符串
+      const photos = successList.map((item) => {
+        return item.url
+      })
+      // staffPhoto 是一个字符串
+      const staffPhoto = photos.join(';')
       try {
         console.log(this.formData, this.userId)
         const ret = await reqUpdatePersonal({
           ...this.formData,
           // 当前修改的用户的id
-          id: this.userId
+          id: this.userId,
+          staffPhoto
         })
         if (!ret.success) {
           this.$message.error(ret.message)

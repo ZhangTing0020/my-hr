@@ -36,6 +36,17 @@ const cos = new COS({
 export default {
   // 这里如果不写name属性,在全局注册组件的时候,取其name属性,就会报错,Cannot read properties of undefined (reading ‘toLowerCase‘)
   name: 'ImageUpload',
+  props: {
+    // 从父组件传过来的数据,是数组包字符串,但是
+    defaultImage: {
+      type: Array,
+      required: true
+    },
+    limit: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       fileList: [
@@ -50,7 +61,28 @@ export default {
   computed: {
     isLen() {
       // 这里会返回true 或者false 在上边动态绑定类名的时候,就根据true或者false来判断类名是否生效
-      return this.fileList.length >= 1
+      return this.fileList.length >= this.limit
+    }
+  },
+  watch: {
+    // 父组件传过来得数据是数组包字符串
+    // 这里需要得是数组包对象
+    // 怎么确定哪里需要得数据类型是什么呢????????????????
+    // 因为腾讯云返回的每一张图片的数据都是一个对象,要保存在vue变量的fileList中,所以需要的就是数组包对象嘛?所以在这里需要转化一下
+    // defaultImage(urls) {
+    //   this.fileList = urls.map((url) => {
+    //     return {
+    //       url: url
+    //     }
+    //   })
+    // }
+
+    defaultImage(urls) {
+      this.fileList = urls.map((url) => {
+        return {
+          url: url
+        }
+      })
     }
   },
   methods: {
