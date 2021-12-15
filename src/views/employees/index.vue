@@ -347,11 +347,11 @@ export default {
           this.$message.success('删除信息成功')
           this.reqGetEmployeeList()
         } else {
-          console.log('11111111111111111')
+          // console.log('11111111111111111')
           this.$message.error('删除信息失败')
         }
       } catch {
-        console.log('222222222222222222222')
+        // console.log('222222222222222222222')
         this.$message.error('删除信息失败')
       }
     },
