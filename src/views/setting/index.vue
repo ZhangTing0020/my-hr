@@ -87,6 +87,20 @@
         <el-button type="primary" @click="submitForm(form)">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 在员工管理页面里边,给每一个员工分配角色
+    这里的角色就相当于一个职位,每一个职位的权限不同
+    <!-- 分配权限的弹层 -->
+    <el-dialog title="分配权限" :visible.sync="showAuthDialog">
+      <div>权限列表</div>
+      <template #footer>
+        <div style="text-align: right;">
+          <el-button @click="handleClose">取消</el-button>
+          <el-button type="primary">确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    -->
   </div>
 </template>
 

@@ -10,7 +10,7 @@ export function translateListToTreeData(list, id) {
       也就不再执行translateListToTreeData
       */
     if (item.pid === id) {
-      const children = this.translateListToTreeData(list, item.id)
+      const children = translateListToTreeData(list, item.id)
       if (children && children.length > 0) {
         item.children = children
       }
