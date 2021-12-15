@@ -43,6 +43,7 @@
                 :src="scope.row.staffPhoto"
                 style="width: 50px; height: 50px; border-radius: 25px"
                 alt=""
+                @click="showCodeBox(scope.row.staffPhoto)"
               >
             </template>
           </el-table-column>
@@ -142,6 +143,17 @@
     <!-- 弹窗组件 新增员工的dialog-->
     <add-employee :show-dialog.sync="isShow" @closeDialog="closeDialog" />
 
+    <!-- 二维码弹窗 -->
+    <el-dialog
+      title="二维码"
+      :visible="showCodeDialog"
+      @close="showCodeDialog = false"
+    >
+      <el-row type="flex" justify="center">
+        <!-- 绘制二维码的画布 -->
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
     <!-- 分配角色弹窗 -->
     <AssignRole :user-id="userId" :show-role-dialog.sync="showRoleDialog" />
   </div>
@@ -154,6 +166,7 @@ import { reqGetEmployeeListAPI, reqDelEmployeeAPI } from '@/api/employees.js'
 import AddEmployee from './components/AddEmployee'
 import typeEnum from '@/api/constant/employees.js'
 import moment from 'moment'
+import QrCode from 'qrcode'
 import AssignRole from './components/assign-role.vue'
 export default {
   name: 'Employees',
@@ -185,6 +198,8 @@ export default {
       userId: '',
       // 控制分配角色弹窗
       showRoleDialog: false,
+      // 二维码弹窗标志位
+      showCodeDialog: false,
       defaultImg:
         'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2146034403,1504718527&fm=26&gp=0.jpg'
     }
@@ -195,6 +210,19 @@ export default {
   methods: {
     ceshiScope(scope) {
       console.log(scope)
+    },
+    // ??????????????????????????????????????????????????????????
+    showCodeBox(url) {
+      if (!url) return
+      // 数据变成true之后，此时弹窗是否已经显示了？没有
+      // 必须保证弹窗打开后，才去获取DOM元素
+      this.showCodeDialog = true
+      this.$nextTick(() => {
+        // 保证前面的数据更新的页面完成渲染后触发回调
+        // 生成当前头像的url地址的二维码，渲染到弹窗里面
+        const dom = this.$refs.myCanvas
+        QrCode.toCanvas(dom, url)
+      })
     },
     // 给用户分配角色
     handleRole(id) {
