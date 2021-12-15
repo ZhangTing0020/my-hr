@@ -2,6 +2,27 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+// 把普通数组转化为树形结构的数据
+export function translateListToTreeData(list, id) {
+  const result = []
+  list.forEach((item) => {
+    /* 递归跳出条件,最后一次循环时,item.pid 与 id不等,于是不进入这个if条件,
+      也就不再执行translateListToTreeData
+      */
+    if (item.pid === id) {
+      const children = this.translateListToTreeData(list, item.id)
+      if (children && children.length > 0) {
+        item.children = children
+      }
+      result.push(item)
+    }
+  })
+
+  // 传来的是数组,返回的是数组
+  // 把一级部门当作是数组的一个元素,二级部门的所有数据当作是一级部门的一个属性children
+  return result
+}
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time

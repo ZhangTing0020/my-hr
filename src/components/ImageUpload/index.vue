@@ -178,9 +178,14 @@ export default {
                 // 所以在父组件中,应该要拿到这个url地址,在父组件ImageUpload上绑定ref属性,然后
                 // this.$refs.XXX.fileList就能拿到这个值了
                 // *************************************
-                // this.fileList.url = 'https://' + data.Location 这里为什么不是给this.fileList.url赋值,而是给fileInfo.url赋值   而fileInfo.url又是怎么和fileList.url产生联系的??????是watch监听函数嘛?????
+                // this.fileList[0].url = 'https://' + data.Location
+                // 这里为什么不是给this.fileList.url赋值,而是给fileInfo.url赋值   而fileInfo.url又是怎么和fileList.url产生联系的??????是watch监听函数嘛?????
+                // fileList是一个数组,不能直接fileList.url  而且上边判断图片的时候,用的是数组的find方法,,find方法的返回值,是符合条件的第一个元素\
+                // 所以这里的fileList[0] 就与 fileInfo是相等的,但是仅限于是一张图片的时候,不然有多张图片的时候,每次都会将第一张图片覆盖
                 fileInfo.url = 'https://' + data.Location
-                console.log(this.fileList.url) // undefined
+                // console.log(this.fileList[0].url)
+
+                // console.log(this.fileList[0] === fileInfo)
               }
             } else {
               this.$message.error('图片上传失败')

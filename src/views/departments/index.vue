@@ -49,6 +49,7 @@
 import TreeTools from './components/TreeTools.vue'
 import AddDept from './components/AddDept.vue'
 import { getDepartmentsAPI, editDepartmentAPI } from '@/api/departments.js'
+import { translateListToTreeData } from '@/utils/index.js'
 export default {
   name: 'Departments',
   components: { TreeTools, AddDept },
@@ -124,26 +125,27 @@ export default {
     displayScope(scope) {
       console.log('el-tree返回的数据', scope)
     },
-    // 把普通数组转化为树形结构的数据
-    translateListToTreeData(list, id) {
-      const result = []
-      list.forEach((item) => {
-        /* 递归跳出条件,最后一次循环时,item.pid 与 id不等,于是不进入这个if条件,
-        也就不再执行translateListToTreeData
-        */
-        if (item.pid === id) {
-          const children = this.translateListToTreeData(list, item.id)
-          if (children && children.length > 0) {
-            item.children = children
-          }
-          result.push(item)
-        }
-      })
+    // 将这个方法设置成工具方法,,,导入直接调用即可
+    // // 把普通数组转化为树形结构的数据
+    // translateListToTreeData(list, id) {
+    //   const result = []
+    //   list.forEach((item) => {
+    //     /* 递归跳出条件,最后一次循环时,item.pid 与 id不等,于是不进入这个if条件,
+    //     也就不再执行translateListToTreeData
+    //     */
+    //     if (item.pid === id) {
+    //       const children = this.translateListToTreeData(list, item.id)
+    //       if (children && children.length > 0) {
+    //         item.children = children
+    //       }
+    //       result.push(item)
+    //     }
+    //   })
 
-      // 传来的是数组,返回的是数组
-      // 把一级部门当作是数组的一个元素,二级部门的所有数据当作是一级部门的一个属性children
-      return result
-    },
+    //   // 传来的是数组,返回的是数组
+    //   // 把一级部门当作是数组的一个元素,二级部门的所有数据当作是一级部门的一个属性children
+    //   return result
+    // },
     async loadDepartmentsList() {
       try {
         const ret = await getDepartmentsAPI()
@@ -156,7 +158,7 @@ export default {
           所以,传给在translateListToTreeData中的实参1就是整个数组,实参2是判断条件需要的id
           */
           this.dlist = ret.data.depts
-          this.departs = this.translateListToTreeData(ret.data.depts, '')
+          this.departs = translateListToTreeData(ret.data.depts, '')
           this.titleData.name = ret.data.companyName
         }
       } catch {
