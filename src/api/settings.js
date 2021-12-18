@@ -27,3 +27,29 @@ export function reqAddRoleAPI(data) {
     method: 'post'
   })
 }
+
+// 修改角色
+export function reqUpdateRole(data) {
+  return request({
+    method: 'put',
+    url: `/sys/role/${data.id}`,
+    data
+  })
+}
+
+// 获取角色详情
+export function reqGetRoleDetail(id) {
+  return request({
+    method: 'get',
+    url: `/sys/role/${id}`
+  })
+}
+
+// 给角色分配权限
+export function reqAssignPerm(data) {
+  return request({
+    url: '/sys/role/assignPrem',
+    method: 'put',
+    data
+  })
+}

@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import { default as store, myTest } from '@/store'
 
+// console.log('router: here')
+// console.log(store)
+// console.log(myTest)
+// console.log('router: here')
 Vue.use(Router)
 
 /* Layout */

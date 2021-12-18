@@ -19,3 +19,5 @@ const store = new Vuex.Store({
 })
 
 export default store
+
+// export const myTest = 'vuex测试'

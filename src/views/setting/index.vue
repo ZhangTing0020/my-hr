@@ -32,7 +32,7 @@
                    上边这个就是之前的用法
                  -->
                 <template v-slot="scope">
-                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="success" @click="openPermission(scope.row.id)">分配权限</el-button>
                   <el-button size="small" type="primary">编辑</el-button>
                   <!-- 删除角色的时候,需要传入一个实参id,这个id的来源是要用到作用域插槽
                 通过子组件传给父组件的id,来删除角色 -->
@@ -90,13 +90,24 @@
 
     <!-- 在员工管理页面里边,给每一个员工分配角色
     这里的角色就相当于一个职位,每一个职位的权限不同
-    <!-- 分配权限的弹层 -->
-    <el-dialog title="分配权限" :visible.sync="showAuthDialog">
+    分配权限的弹层 -->
+    <el-dialog title="分配权限" :visible.sync="showAuthDialog" @open="loadPermissionList">
       <div>权限列表</div>
+      <!-- default-expanded-keys和default-checked-keys设置默认展开和默认选中的节点,需要注意的是，此时必须设置node-key，其值为节点数据中的一个字段名，该字段在整棵树中是唯一的 -->
+      <el-tree
+        ref="tree"
+        :data="permissionData"
+        show-checkbox
+        node-key="id"
+        :default-expand-all="true"
+        :default-checked-keys="defaultAuth"
+        :props="defaultProps"
+      />
       <template #footer>
         <div style="text-align: right;">
-          <el-button @click="handleClose">取消</el-button>
-          <el-button type="primary">确定</el-button>
+          <el-button @click="showAuthDialog=false">取消</el-button>
+          <el-button type="primary" @click="">确定</el-button>
+
         </div>
       </template>
     </el-dialog>
@@ -105,7 +116,10 @@
 </template>
 
 <script>
-import { reqGetRoleListAPI, reqDeleteRoleAPI, reqAddRoleAPI } from '@/api/settings.js'
+import { reqGetRoleListAPI, reqDeleteRoleAPI, reqAddRoleAPI, reqGetRoleDetail } from '@/api/settings.js'
+import { reqGetPermissionList } from '@/api/permission.js'
+import { translateListToTreeData } from '@/utils/index.js'
+
 export default {
   data() {
     return {
@@ -119,6 +133,15 @@ export default {
       total: 0,
       loading: true,
       isShowAddBox: false, //  控制添加角色弹出框的显示与关闭
+      showAuthDialog: false, // 给角色分配权限
+      roleId: '', // 记录正在操作的角色
+      permissionData: [], // 存储权限数据
+      // 角色默认拥有的权限
+      defaultAuth: [],
+      // 设置树的显示格式
+      defaultProps: {
+        label: 'name'
+      },
       form: {
         name: '',
         description: ''
@@ -132,6 +155,35 @@ export default {
     this.reqGetRoleList()
   },
   methods: {
+    loadPermissionList() {
+      // Dialog 打开的回调 open上绑定的方法
+      // 在这个方法中,获取所有的权限,也就是permission/index.vue中的,获取所有的权限,调取同样的接口
+      const ret1 = reqGetPermissionList()
+
+      // 获取当前角色的权限,,,他本身就具有的权限
+      const ret2 = reqGetRoleDetail(this.roleId)
+      // 因为获取所有的权限列表以及获取当前角色的权限,没有先后顺序,所以不用顺序异步等待
+      // 因为调用两个api是没有顺序的,没有必要等一个返回结果后另一个才去发请求,两个await修饰api  是串行的,一个执行完了之后才去执行下一个
+      console.log(ret1, ret2)
+      Promise.all([ret1, ret2]).then(values => {
+        // permissionData用来接收后台返回的原始数据,后边根据原始数据转换成树形数据
+        this.permissionData = translateListToTreeData(values[0].data, '0')
+        // 角色默认拥有的权限
+        this.defaultAuth = values[1].data.permIds
+        console.log(this.permissionData)
+        console.log(this.defaultAuth)
+        // setCheckedKeys 通过 key 设置
+        this.$refs.tree.setCheckedKeys(this.defaultAuth)
+      }).catch(() => {
+        this.$message.error('获取权限失败')
+      })
+    },
+    // 分配权限,点击打开
+    openPermission(id) {
+      this.showAuthDialog = true
+      // 打开dialog之后,将后台返回的数据,展示成树状结构
+      this.roleId = id
+    },
     // 提交表单
     async submitForm(form) {
       try {
