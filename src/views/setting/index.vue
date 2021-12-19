@@ -106,7 +106,7 @@
       <template #footer>
         <div style="text-align: right;">
           <el-button @click="showAuthDialog=false">取消</el-button>
-          <el-button type="primary" @click="">确定</el-button>
+          <el-button type="primary" @click="handAuth">确定</el-button>
 
         </div>
       </template>
@@ -119,7 +119,7 @@
 import { reqGetRoleListAPI, reqDeleteRoleAPI, reqAddRoleAPI, reqGetRoleDetail } from '@/api/settings.js'
 import { reqGetPermissionList } from '@/api/permission.js'
 import { translateListToTreeData } from '@/utils/index.js'
-
+import { reqAssignPerm } from '@/api/settings'
 export default {
   data() {
     return {
@@ -155,6 +155,24 @@ export default {
     this.reqGetRoleList()
   },
   methods: {
+    // 点击确定之后,提交数据,调接口
+    async handAuth() {
+      try {
+        const ret = await reqAssignPerm({
+          id: this.roleId,
+          // 当前树结构复选框所有选中的
+          permIds: this.$refs.tree.getCheckedKeys()
+        })
+        console.log(ret)
+        if (ret.code === 10000) {
+          this.showAuthDialog = false
+          this.$refs.tree.setCheckedKeys([])
+          this.permissionData = []
+        }
+      } catch {
+        this.$message.error('提交失败')
+      }
+    },
     loadPermissionList() {
       // Dialog 打开的回调 open上绑定的方法
       // 在这个方法中,获取所有的权限,也就是permission/index.vue中的,获取所有的权限,调取同样的接口
