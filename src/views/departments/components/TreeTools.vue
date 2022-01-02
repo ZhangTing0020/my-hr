@@ -1,5 +1,5 @@
 <template>
-  <!-- 用了一个行列布局 -->
+  <!-- layout布局  用了一个行列布局 -->
   <el-row
     type="flex"
     justify="space-between"
@@ -10,6 +10,7 @@
       <span> {{ nodeData.name }} </span>
     </el-col>
     <el-col :span="4">
+      <!-- 将 type 属性赋值为 'flex'，可以启用 flex 布局，并可通过 justify 属性来指定 start, center, end, space-between, space-around 其中的值来定义子元素的排版方式。 -->
       <el-row type="flex" justify="end">
         <!-- 两个内容 -->
         <el-col> {{ nodeData.manager }} </el-col>
@@ -18,6 +19,7 @@
           <!-- elementUI中,下拉菜单的指令事件 点击菜单项后会触发事件，
           用户可以通过相应的菜单项 key 进行不同的操作 -->
           <!-- @command是事件 -->
+          <!-- Dropdown 下拉菜单 组件 -->
           <el-dropdown @command="handleAction">
             <span style="cursor: pointer">
               操作<i class="el-icon-arrow-down" />
@@ -90,7 +92,7 @@ export default {
       }
     },
     addDept() {
-      // 通知父组件打开弹窗
+      // 通知父组件打开弹窗  子派发父监听
       this.$emit('on-open', this.nodeData.id)
     },
     editDept() {

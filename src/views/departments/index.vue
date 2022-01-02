@@ -3,7 +3,7 @@
     <div class="dashboard-container">
       <el-card class="tree-card">
         <!-- tree-tools 子组件通知父组件打开弹窗 -->
-        <tree-tools
+        <TreeTools
           :node-data="titleData"
           @on-open="toggleAddDept"
           @edit-dept="handleOpen"
@@ -11,6 +11,8 @@
         <!-- 树形菜单 -->
         <el-tree :data="departs" :props="defaultProps">
           <!-- 中间的代码就是插槽内容，用于定制每一行的布局效果 -->
+          <!-- 通过作用域插槽定制每一行的布局 -->
+
           <template v-slot="scope">
             <!-- 打印作用域插槽传过来的数据 -->
             <!-- <tree-tools
@@ -20,7 +22,7 @@
               @edit-dept="handleOpen"
             >{{ displayScope(scope) }} </tree-tools> -->
 
-            <tree-tools
+            <TreeTools
               :node-data="scope.data"
               @on-success="onSuccess"
               @on-open="toggleAddDept"
