@@ -12,7 +12,10 @@
         </template>
         <!-- <span>本月最新新闻</span> -->
         <template v-slot:right>
-          <el-button @click="$router.push('/import')">导入</el-button>
+          <!-- <el-button @click="$router.push('/import')">导入</el-button>  添加权限点-->
+          <!-- <el-button v-if="$isOk('POINT-USER-ADD1')" type="primary" size="small" @click="handleImport">导入</el-button> -->
+
+          <el-button @click="handleImport()">导入</el-button>
           <el-button @click="handleExport()">导出</el-button>
           <el-button @click="openDialog()">新增员工</el-button>
         </template>
@@ -208,6 +211,12 @@ export default {
     this.reqGetEmployeeList()
   },
   methods: {
+    handleImport() {
+      const isOk = this.$isOk('POINT-USER-ADD1')
+      if (isOk) {
+        this.$router.push('/import')
+      }
+    },
     ceshiScope(scope) {
       console.log(scope)
     },

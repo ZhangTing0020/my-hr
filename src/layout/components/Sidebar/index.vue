@@ -36,12 +36,18 @@ import variables from '@/styles/variables.scss'
 export default {
   components: { SidebarItem, Logo },
   computed: {
-    ...mapGetters(['sidebar']),
-    routes() {
-      // console.log('000000000', this.$route)
-      // console.log('11111111111111', this.$router)
-      return this.$router.options.routes
-    },
+    ...mapGetters(['sidebar', 'routes']),
+    // routes() {
+    //   // console.log('000000000', this.$route)
+    //   // console.log('11111111111111', this.$router)
+    //   // 因为通过vue-router的this.$router.options.routes 无法获取动态路由映射(仅仅可以获取静态路由)
+    //   // 所以就将所有的路由放在vuex中管理
+    //   // 所以就在store/modules/加了permission.js
+    //   // return this.$router.options.routes
+    //   return this.$store.state.permission.routes
+    //  这里还有更简单的写法,在store/getters下边加上 routes: state => state.permission.routes
+    //  ...mapGetters(['sidebar']), 但是这里需要将getters中的routes映射过来 ,这样的话,模板也不用发生变化
+    // },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route

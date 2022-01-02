@@ -72,6 +72,12 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
+      // 退出时重置路由
+      // 1、清空token
+      // 2、清空用户信息
+      // 3、重置路由为静态路由
+      // 4、清除vuex中动态路由
+      // 5、跳转到登录页面
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
     }

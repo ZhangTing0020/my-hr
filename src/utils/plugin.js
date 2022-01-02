@@ -3,9 +3,10 @@
 
 import PageTools from '@/components/PageTools'
 import moment from 'moment'
-
+import store from '@/store'
 import UploadExcel from '@/components/UploadExcel'
 import ImageUpload from '@/components/ImageUpload'
+import { Message } from 'element-ui'
 const myImgerror = {
   install(Vue, options) {
     // console.log('111111', options)
@@ -48,6 +49,21 @@ const myImgerror = {
     })
 
     // Vue.component('PageTools', PageTools) // 注册工具栏组件
+
+    // 扩展一个实例方法:用于判断按钮的操作权限
+    Vue.prototype.$isOk = (authPoint) => {
+      // authPoint表示此时判断的是哪一个按钮的标志  判断authPoint在不在points中
+      // 先获取所有的points 从store中获取所有的权限点
+      // const allPoints = store.state.user.userInfo.roles.points // 这里的代码太长,于是放在了getters中
+      const allPoints = store.getters.points
+      if (allPoints.includes(authPoint)) {
+        // 有权限，返回true
+        return true
+      } else {
+        Message.error('没有该操作权限')
+        return false
+      }
+    }
   }
 }
 

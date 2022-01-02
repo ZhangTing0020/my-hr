@@ -91,9 +91,12 @@
     <!-- 在员工管理页面里边,给每一个员工分配角色
     这里的角色就相当于一个职位,每一个职位的权限不同
     分配权限的弹层 -->
+    <!-- loadPermissionList 打开弹窗时调用,获取所有的权限列表数据 -->
     <el-dialog title="分配权限" :visible.sync="showAuthDialog" @open="loadPermissionList">
       <div>权限列表</div>
       <!-- default-expanded-keys和default-checked-keys设置默认展开和默认选中的节点,需要注意的是，此时必须设置node-key，其值为节点数据中的一个字段名，该字段在整棵树中是唯一的 -->
+      <!-- 在弹窗的中间将数据展示成一个树状结构 -->
+      <!-- props 根据后端返回的字段名称来修改对应关系 -->
       <el-tree
         ref="tree"
         :data="permissionData"
@@ -103,6 +106,15 @@
         :default-checked-keys="defaultAuth"
         :props="defaultProps"
       />
+      <!-- - data 表示树的所有数据
+           - props 设置节点显示的数据名称
+           - show-checkbox 显示选择框
+           - node-key 设置数据节点的唯一表示的属性
+           - :default-checked-keys="[5, 10]"表示id是5的节点被选中
+           - show-checkbox 表示是否显示复选框
+           - default-expand-all 默认展开
+           - check-strictly  设置true, 可以关闭父子关联(父级节点可以单独选择)
+ -->
       <template #footer>
         <div style="text-align: right;">
           <el-button @click="showAuthDialog=false">取消</el-button>
@@ -135,10 +147,10 @@ export default {
       isShowAddBox: false, //  控制添加角色弹出框的显示与关闭
       showAuthDialog: false, // 给角色分配权限
       roleId: '', // 记录正在操作的角色
-      permissionData: [], // 存储权限数据
+      permissionData: [], // 存储权限数据,所有的权限列表数据 ,调接口获取的
       // 角色默认拥有的权限
       defaultAuth: [],
-      // 设置树的显示格式
+      // 设置树的显示格式, 后端给的数据不一定是label,所以要改变对应关系
       defaultProps: {
         label: 'name'
       },
@@ -162,6 +174,7 @@ export default {
           id: this.roleId,
           // 当前树结构复选框所有选中的
           permIds: this.$refs.tree.getCheckedKeys()
+          // permIds: this.defaultAuth
         })
         console.log(ret)
         if (ret.code === 10000) {
@@ -185,13 +198,25 @@ export default {
       console.log(ret1, ret2)
       Promise.all([ret1, ret2]).then(values => {
         // permissionData用来接收后台返回的原始数据,后边根据原始数据转换成树形数据
+        // 一级节点的pid都是 '0'
+        // **************************************************************
+        // 如果第一个参数传不对的话,只会显示复选框,没有name,开发的过程中遇到过
         this.permissionData = translateListToTreeData(values[0].data, '0')
+        // **************************************************************
+
+        // this.$nextTick(() => {
         // 角色默认拥有的权限
         this.defaultAuth = values[1].data.permIds
-        console.log(this.permissionData)
-        console.log(this.defaultAuth)
+        // })
+        // console.log(this.permissionData)
+        // console.log(this.defaultAuth)
+        // 控制节点的选中有两种方案
+        // 1.直接用el-tree中的属性 :default-checked-keys 将返回的值放在数组中,然后赋值给这个属性
+        // 2.给这个el-tree中绑定ref属性,然后通过this.$refs.tree.setCheckedKeys 设置
+
+        //  const defaultAuth = values[1].data.permIds
         // setCheckedKeys 通过 key 设置
-        this.$refs.tree.setCheckedKeys(this.defaultAuth)
+        // this.$refs.tree.setCheckedKeys(defaultAuth)
       }).catch(() => {
         this.$message.error('获取权限失败')
       })

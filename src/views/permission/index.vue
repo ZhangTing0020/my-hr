@@ -65,6 +65,13 @@
 </template>
 
 <script>
+// 在权限管理页面中，我们设置了一个标识， 这个标识可以和我们的路由模块进行关联，
+// 如果用户拥有这个标识，那么用户就可以 拥有这个路由模块，如果没有这个标识，就不能访问路由模块
+// 如果用户拥有权限点标识，那么用户就可以操作对应的按钮，否则不可以。
+
+// 1. 建立用户和权限的关联关系（通过角色间接建立）
+// 2. 如何利用用户的权限关系控制访问操作：路由（一级权限）；功能按钮（二级权限）
+
 import { reqGetPermissionList, reqAddPermission, reqDelPermission, reqGetPermissionDetail } from '@/api/permission'
 import { translateListToTreeData } from '@/utils/index.js'
 export default {

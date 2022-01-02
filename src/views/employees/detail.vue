@@ -29,7 +29,7 @@
           </el-tab-pane>
           <el-tab-pane label="个人详情">
             <!-- 放置个人详情 -->
-            <user-info />
+            <UserInfo />
           </el-tab-pane>
           <el-tab-pane label="岗位信息">
             <!-- 内容 -->

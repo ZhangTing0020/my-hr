@@ -22,7 +22,7 @@ import settingRouter from '@/router/modules/setting'
 import socialRouter from '@/router/modules/social'
 
 // 动态路由表 => 动态路由(需要权限才可以访问的) 我们这里准备一个数组存放
-export const dynamicRoutes = [
+export const dynamicRouters = [
   departmentsRouter,
   employeesRouter,
   settingRouter,
@@ -91,17 +91,18 @@ export const constantRoutes = [
     }
 
     ]
-  }
+  },
 
   // 404 page must be placed at the end !!!
   // 暂时注释掉,后边使用
-  // { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...dynamicRoutes]
+  // routes: [...constantRoutes, ...dynamicRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()

@@ -8,7 +8,7 @@ import {
   setToken,
   removeToken
 } from '@/utils/auth'
-// import { resetRouter } from '@/router'
+import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -81,12 +81,25 @@ const actions = {
   },
 
   logout({ commit }) {
+    // 退出时重置路由
+    // 1、清空token
+    // 2、清空用户信息
+    // 3、重置路由为静态路由
+    // 4、清除vuex中动态路由
+    // 5、跳转到登录页面
+
     // 删除vuex中的token
     commit('SET_TOKEN', '')
     // 删除本地存储中的token
     removeToken()
     // 删除用户信息
     commit('removeInfo', '')
+    // 3、重置路由为静态路由 (清除动态路由映射信息)
+    resetRouter()
+    // 4、清除vuex中动态路由
+    // 在局部模块中默认只能触发当前模块的mutation，如果想触发全局或者其他模块的mutation
+    // 需要添加第三个参数 { root: true }
+    commit('permission/setRoutes', [], { root: true })
   },
 
   // 获取用户信息 ,这里是从layout下的components/Navbar调过来的

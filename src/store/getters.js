@@ -8,6 +8,12 @@ const getters = {
 
   uname: state => state.user.userInfo && state.user.userInfo.username,
   // 因为获取用户头像依赖于 用户id,,,用户id是获取用户名的时候顺便得到的
-  userId: state => state.user.userInfo && state.user.userInfo.userId
+  userId: state => state.user.userInfo && state.user.userInfo.userId,
+  // 将routes放在getters中减少一个计算属性的使用 layout/components/Sidebar/index
+  // return this.$store.state.permission.routes
+  routes: state => state.permission.routes,
+
+  // 在plugins中的优化
+  points: state => state.user.userInfo.roles.points
 }
 export default getters
