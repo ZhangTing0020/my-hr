@@ -1,6 +1,10 @@
 // import { config } from '@vue/test-utils'
 import axios from 'axios'
 import store from '../store'
+
+import router from '../router'
+import { removeToken } from './auth'
+import { resetRouter } from '@/router'
 // 基准路径(node.js中提供了获取环境变量的API: process.env.环境变量的名称)
 const baseURL = process.env.VUE_APP_BASE_API
 // const baseURL = 'http://localhost:9528/dev-api'
@@ -30,6 +34,40 @@ service.interceptors.response.use(res => {
   // res表示axios包装后的数据
   return res.data
 }, (err) => {
+// 处理token失效的问题
+  if (err.response.status === 401 && err.response.data.code === 10002) {
+    // 退出时重置路由
+    // 1、清空token
+    // 2、清空用户信息
+    // 3、重置路由为静态路由
+    // 4、清除vuex中动态路由
+    // 5、跳转到登录页面
+
+    // 删除vuex中的token
+    store.commit('user/SET_TOKEN', '')
+    // 删除本地存储中的token
+    removeToken()
+    // 删除用户信息
+    store.commit('user/removeInfo', '')
+    // 3、重置路由为静态路由 (清除动态路由映射信息)
+    resetRouter()
+    // 4、清除vuex中动态路由
+    // 在局部模块中默认只能触发当前模块的mutation，如果想触发全局或者其他模块的mutation
+    // 需要添加第三个参数 { root: true }
+    store.commit('permission/setRoutes', [], { root: true })
+    // 跳转到登录页面
+    router.push('/login')
+
+    // token已经失效；删除vuex中的token；删除本地缓存中的token，删除用户信息；跳转到登录页面
+    // store.commit('user/SET_TOKEN', '')
+    // // 删除本地缓存的token
+    // removeToken()
+    // // 删除用户信息
+    // store.commit('user/clearInfo')
+    // // 跳转到登录页面
+    // router.push('/login')
+  }
+
   return Promise.reject(err)
 })
 
