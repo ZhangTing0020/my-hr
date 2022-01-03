@@ -130,7 +130,7 @@ export default {
     // 将这个方法设置成工具方法,,,导入直接调用即可
     // // 把普通数组转化为树形结构的数据
     // translateListToTreeData(list, id) {
-    //   const result = []
+    //   const result = [] //传来的是数组,返回的也是数组,不过是一个二维数组
     //   list.forEach((item) => {
     //     /* 递归跳出条件,最后一次循环时,item.pid 与 id不等,于是不进入这个if条件,
     //     也就不再执行translateListToTreeData
@@ -160,6 +160,7 @@ export default {
           所以,传给在translateListToTreeData中的实参1就是整个数组,实参2是判断条件需要的id
           */
           this.dlist = ret.data.depts
+          console.log(ret.data.depts)
           this.departs = translateListToTreeData(ret.data.depts, '')
           this.titleData.name = ret.data.companyName
         }

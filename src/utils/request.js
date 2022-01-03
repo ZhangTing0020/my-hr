@@ -15,7 +15,10 @@ service.interceptors.request.use(config => {
   // 统一添加请求头,如果有token,就添加请求头Authorization
   const token = store.getters.token
   if (token) {
-    config.headers.Authorization = 'Bearer ' + token
+    // config.headers.Authorization = 'Bearer ' + token
+    config.headers = {
+      Authorization: 'Bearer ' + token
+    }
   }
   return config
 }, (err) => {
