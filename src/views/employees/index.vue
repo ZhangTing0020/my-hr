@@ -296,10 +296,12 @@ export default {
         工号: 'workNumber',
         部门: 'departmentName'
       }
+      // reqGetEmployeeListAPI获取员工列表数据
       const rawData = await reqGetEmployeeListAPI({
         page: 1,
         size: 50
       })
+      // 根据对应关系,获取转换之后的数据
       const list = await this.getExportData(headers, rawData.data.rows)
 
       // Object.keys 是ES6提供的函数用于获取对象的所有的key，最终形成数组
