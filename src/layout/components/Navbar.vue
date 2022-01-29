@@ -1,37 +1,52 @@
 <template>
-  <div class="navbar">
-    <!-- 汉堡图标 -->
-    <hamburger
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
-    <!-- 面包屑导航 -->
-    <!-- <breadcrumb class="breadcrumb-container" /> -->
-    <div class="app-breadcrumb">
-      江苏传智播客教育科技股份有限公司
-      <span class="breadBtn">体验版</span>
+  <div>
+    <!-- 上边的头 -->
+    <div class="navbar">
+      <!-- 汉堡图标 -->
+      <hamburger
+        :is-active="sidebar.opened"
+        class="hamburger-container"
+        @toggleClick="toggleSideBar"
+      />
+      <!-- 面包屑导航 -->
+      <!-- <breadcrumb class="breadcrumb-container" /> -->
+      <div class="app-breadcrumb">
+        江苏传智播客教育科技股份有限公司
+        <span class="breadBtn">体验版</span>
+      </div>
+
+      <div class="right-menu">
+        <!-- 右侧下拉菜单 -->
+        <el-dropdown class="avatar-container" trigger="click">
+          <div class="avatar-wrapper">
+            <img v-imgerror :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <i class="el-icon-caret-bottom" />
+            <span>{{ uname }}</span>
+          </div>
+          <el-dropdown-menu slot="dropdown" class="user-dropdown">
+            <router-link to="/">
+              <el-dropdown-item> 首页 </el-dropdown-item>
+            </router-link>
+            <!-- native的作用：把原生事件绑定到组件的根节点上  -->
+            <el-dropdown-item divided @click.native="logout">
+              <span style="display: block">退出</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
 
-    <div class="right-menu">
-      <!-- 右侧下拉菜单 -->
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img v-imgerror :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-          <span>{{ uname }}</span>
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item> 首页 </el-dropdown-item>
-          </router-link>
-          <!-- native的作用：把原生事件绑定到组件的根节点上  -->
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display: block">退出</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+    <!-- 下边的tag组件 -->
+    <!-- <div>
+      <el-tag
+        v-for="tag in tags"
+        :key="tag.name"
+        closable
+        :type="tag.type"
+      >
+        {{ tag.name }}
+      </el-tag>
+    </div> -->
   </div>
 </template>
 
@@ -50,7 +65,14 @@ export default {
   },
   data() {
     return {
-      defaultImg
+      defaultImg,
+      tags: [
+        { name: '标签一', type: '' },
+        { name: '标签二', type: 'success' },
+        { name: '标签三', type: 'info' },
+        { name: '标签四', type: 'warning' },
+        { name: '标签五', type: 'danger' }
+      ]
     }
   },
   computed: {
